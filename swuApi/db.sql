@@ -1,4 +1,5 @@
--- 1. Crear la Base de Datos (solo si no existe)
+
+-- Creo la Base de Datos (solo si no existe)
 IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'swuDB')
     CREATE DATABASE swuDB;
 
@@ -10,12 +11,12 @@ FROM sys.databases
 WHERE name = 'swuDB';
 
 
--- Función Helper para eliminar tablas en orden si existen, respetando las FK
+/* Función Helper para eliminar tablas en orden si existen, respetando las FK */
 IF OBJECT_ID('swuDB.dbo.Cards', 'U') IS NOT NULL DROP TABLE Cards;
 IF OBJECT_ID('swuDB.dbo.Collections', 'U') IS NOT NULL DROP TABLE Collections;
 
 
-/*------------- Colecciones (Collections) -------------*/
+/*------------- Colecciones -------------*/
 
 CREATE TABLE Collections (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -27,7 +28,6 @@ CREATE TABLE Collections (
     IsComplete BIT NOT NULL DEFAULT 0
 );
 
--- DML (Datos de ejemplo para Collections)
 INSERT INTO Collections (CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete)
 VALUES
 ('Spark of Rebellion', '#e10600', 252, 500.00, GETDATE(), 0),
@@ -36,7 +36,7 @@ VALUES
 SELECT * FROM Collections;
 
 
-/*------------- Cartas (Cards) -------------*/
+/*------------- Cartas -------------*/
 
 CREATE TABLE Cards (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -54,12 +54,11 @@ CREATE TABLE Cards (
     FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
 );
 
--- DML (Datos de ejemplo para Cards)
 INSERT INTO Cards (CardName, Subtitle, Model, Aspect, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo)
 VALUES
 ('Luke Skywalker', 'Jedi Knight', 'Unit', 'Vigilance', 5, 1, 1, 15.00, GETDATE(), 0),
 ('Darth Vader', 'Dark Lord', 'Unit', 'Command', 1, 1, 1, 30.50, GETDATE(), 0),
 ('Fighter Wing', NULL, 'Starship', 'Aggression', 150, 2, 2, 5.00, GETDATE(), 0),
-('Moff Gideon', 'Imperial Commander', 'Leader', 'Command', 10, 1, 2, 20.00, GETDATE(), 1); -- Carta promocional de ejemplo
+('Moff Gideon', 'Imperial Commander', 'Leader', 'Command', 10, 1, 2, 20.00, GETDATE(), 1);
 
 SELECT * FROM Cards;

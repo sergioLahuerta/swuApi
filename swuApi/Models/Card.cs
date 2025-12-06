@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using swuApi.Enums;
 
 namespace swuApi.Models
 {
@@ -8,8 +9,8 @@ namespace swuApi.Models
         public int Id { get; set; } 
         public string CardName { get; set; } = string.Empty;
         public string Subtitle { get; set; }
-        public string Model { get; set; } = string.Empty;
-        public string Aspect { get; set; } 
+        public CardModelType Model { get; set; }
+        public CardAspectType Aspect { get; set; }
         public int CardNumber { get; set; } 
         public int Copies { get; set; }
         public decimal Price { get; set; } 
