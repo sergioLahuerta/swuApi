@@ -1,0 +1,110 @@
+/* SwaggerDark.css - Tema oscuro para Swagger UI */
+
+body {
+    background-color: #1e1e1e !important;
+    color: #c0c0c0 !important;
+}
+
+.swagger-ui {
+    background-color: #1e1e1e !important;
+    color: #c0c0c0 !important;
+}
+
+.topbar {
+    background-color: #2d2d2d !important;
+}
+
+.scheme-container {
+    background-color: #2d2d2d !important;
+}
+
+.btn, .btn.authorize {
+    background-color: #3a3a3a !important;
+    border-color: #555 !important;
+    color: #c0c0c0 !important;
+}
+
+.btn:hover, .btn:focus {
+    background-color: #5a5a5a !important;
+    color: white !important;
+}
+
+.opblock {
+    background-color: #2d2d2d !important;
+    border-color: #444 !important;
+    color: #c0c0c0 !important;
+}
+
+.opblock-summary {
+    background-color: #3a3a3a !important;
+    border-color: #555 !important;
+    color: #c0c0c0 !important;
+}
+
+.opblock-summary-method {
+    color: #c0c0c0 !important;
+}
+
+.model-box, .model, .parameter-content {
+    background-color: #2d2d2d !important;
+    color: #c0c0c0 !important;
+}
+
+textarea, input[type="text"], select {
+    background-color: #3a3a3a !important;
+    color: #c0c0c0 !important;
+    border: 1px solid #555 !important;
+}
+
+pre, code {
+    background-color: #1e1e1e !important;
+    color: #c0c0c0 !important;
+}
+
+table thead {
+    background-color: #3a3a3a !important;
+    color: #c0c0c0 !important;
+}
+
+.modal-content, .dialog-ux {
+    background-color: #2a2a2a !important;
+    color: #c0c0c0 !important;
+}
+
+.response-col_description__3o6dx pre {
+    background-color: #1e1e1e !important;
+    color: #c0c0c0 !important;
+}
+
+/* Ajustes para otros elementos */
+.markdown p, .markdown code, .markdown pre {
+    color: #c0c0c0 !important;
+}
+
+.swagger-ui a.nostyle, .swagger-ui a.nostyle:visited {
+    color: #cfd1d8;
+}
+
+.opblock-summary-method {
+    color: #000000 !important;
+}
+
+.swagger-ui .opblock .opblock-section-header {
+    background: #202020;
+}
+
+.swagger-ui .opblock .opblock-section-header h4 {
+    color: #c7c8ca;
+}
+
+.swagger-ui .responses-inner, .swagger-ui .response-col_status, .swagger-ui .response-col_description, .swagger-ui .response-col_links, .swagger-ui .tab li button.tablinks {
+    color: #c7c8ca !important;
+}
+
+.swagger-ui .opblock-description-wrapper p, .swagger-ui .opblock-external-docs-wrapper p, .swagger-ui .opblock-title_normal p {
+    color: #c7c8ca;
+}
+
+.swagger-ui .info .title {
+    color: #89bf04;
+}
