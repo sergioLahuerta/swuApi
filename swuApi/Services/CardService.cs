@@ -54,7 +54,9 @@ namespace swuApi.Services
             
             // Validación precio, si es negativo se lanza la excepción
             if (card.Price < 0)
+            {
                 throw new ArgumentException("El precio de la carta no puede ser negativo.", nameof(card.Price));
+            }
             
             // Validación por fecha, si el usuario no introduce una, por defecto la de ese mismo momento
             if (card.DateAcquired == default(DateTime))

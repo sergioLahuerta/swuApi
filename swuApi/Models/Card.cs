@@ -13,13 +13,13 @@ namespace swuApi.Models
         public CardAspectType Aspect { get; set; }
         public int CardNumber { get; set; } 
         public int Copies { get; set; }
-        public decimal Price { get; set; } 
-        public DateTime DateAcquired { get; set; } 
+        public decimal Price { get; set; }
+        public DateTime DateAcquired { get; set; }
         public bool IsPromo { get; set; } = false;
         public int CollectionId { get; set; }
         public Collection? Collection { get; set; }
 
-        public Card() 
+        public Card()
         {
             DateAcquired = DateTime.Now;
         }
