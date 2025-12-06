@@ -6,12 +6,12 @@ namespace swuApi.Models
 {
     public class Card
     {
-        public int Id { get; set; } 
+        public int Id { get; set; }
         public string CardName { get; set; } = string.Empty;
         public string Subtitle { get; set; }
         public CardModelType Model { get; set; }
         public CardAspectType Aspect { get; set; }
-        public int CardNumber { get; set; } 
+        public int CardNumber { get; set; }
         public int Copies { get; set; }
         public decimal Price { get; set; }
         public DateTime DateAcquired { get; set; }
