@@ -1,4 +1,4 @@
--- 1. Crear la Base de Datos (solo si no existe)
+-- Creo la Base de Datos (solo si no existe)
 IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'swuDB')
     CREATE DATABASE swuDB;
 
@@ -15,7 +15,7 @@ IF OBJECT_ID('swuDB.dbo.Cards', 'U') IS NOT NULL DROP TABLE Cards;
 IF OBJECT_ID('swuDB.dbo.Collections', 'U') IS NOT NULL DROP TABLE Collections;
 
 
-/*------------- Colecciones (Collections) -------------*/
+/*------------- Colecciones -------------*/
 
 CREATE TABLE Collections (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -27,7 +27,6 @@ CREATE TABLE Collections (
     IsComplete BIT NOT NULL DEFAULT 0
 );
 
--- DML (Datos de ejemplo para Collections)
 INSERT INTO Collections (CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete)
 VALUES
 ('Spark of Rebellion', '#e10600', 252, 500.00, GETDATE(), 0),
@@ -36,7 +35,7 @@ VALUES
 SELECT * FROM Collections;
 
 
-/*------------- Cartas (Cards) -------------*/
+/*------------- Cartas -------------*/
 
 CREATE TABLE Cards (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -54,7 +53,6 @@ CREATE TABLE Cards (
     FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
 );
 
--- DML (Datos de ejemplo para Cards)
 INSERT INTO Cards (CardName, Subtitle, Model, Aspect, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo)
 VALUES
 ('Luke Skywalker', 'Jedi Knight', 'Unit', 'Vigilance', 5, 1, 1, 15.00, GETDATE(), 0),
