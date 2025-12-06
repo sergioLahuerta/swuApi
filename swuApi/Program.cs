@@ -1,44 +1,57 @@
+using swuApi.Repositories;
+using swuApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Configuración de servicio CORS global
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+// Connection string:
+var connectionString = builder.Configuration.GetConnectionString("swuDB");
+
+builder.Services.AddScoped<IRepository<Card>, CardRepository>(provider =>
+new CardRepository(connectionString));
+
+// builder.Services.AddScoped<IColeccionRepository, ColeccionRepository>(provider =>
+// new ColeccionRepository(connectionString));
+
+// Otros servicios
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Pipeline de la app
 if (app.Environment.IsDevelopment())
 {
+    app.UseStaticFiles();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyAPI");
+        c.InjectStylesheet("/swagger/SwaggerDark.css");
+    });
 }
 
-app.UseHttpsRedirection();
+// CORS
+app.UseCors();
 
-var summaries = new[]
+app.UseAuthorization();
+
+app.MapGet("/", context =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    context.Response.Redirect("/swagger");
+    return Task.CompletedTask;
+});
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
-
+app.MapControllers();
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
