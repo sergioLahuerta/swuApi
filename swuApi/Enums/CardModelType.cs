@@ -9,6 +9,7 @@ namespace swuApi.Enums
         Hyperspace,
 
         [EnumMember(Value = "Hyperspace Foil")]
-        HyperspaceFoil
+        HyperspaceFoil,
+        Showcase
     }
 }
