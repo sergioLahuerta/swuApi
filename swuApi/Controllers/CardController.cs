@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using swuApi.Models;
+using swuApi.DTOs   ;
 using swuApi.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -44,7 +45,7 @@ namespace swuApi.Controllers
                     return NotFound();
                 return Ok(card);
             }
-            catch (ArgumentException ex) 
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -54,15 +55,30 @@ namespace swuApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] Card card)
+        public async Task<IActionResult> Post([FromBody] CardCreationDTO cardDTO)
         {
+            // Mapeo DTO a Modelo Card
+            var card = new Card
+            {
+                CardName = cardDTO.CardName,
+                Subtitle = cardDTO.Subtitle,
+                Model = cardDTO.Model,
+                Aspect = cardDTO.Aspect,
+                CardNumber = cardDTO.CardNumber,
+                Copies = cardDTO.Copies,
+                Price = cardDTO.Price,
+                DateAcquired = cardDTO.DateAcquired,
+                IsPromo = cardDTO.IsPromo,
+                CollectionId = cardDTO.CollectionId
+            };
+
             try
             {
                 await _cardService.AddAsync(card);
+
                 return CreatedAtAction(nameof(Get), new { id = card.Id }, card);
             }
-            // Capturo errores de validación del Servicio como si estuviera el nombre vacío o tuviera un precio negativo
-            catch (ArgumentException ex) 
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -79,7 +95,7 @@ namespace swuApi.Controllers
             {
                 return BadRequest("El ID de la ruta no coincide con el ID del cuerpo.");
             }
-            
+
             try
             {
                 await _cardService.UpdateAsync(card);
@@ -89,7 +105,7 @@ namespace swuApi.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            catch (KeyNotFoundException) 
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }

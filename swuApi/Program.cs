@@ -1,7 +1,10 @@
 using swuApi.Repositories;
 using swuApi.Models;
+using swuApi.Services; // Necesario para registrar los Servicios
 
 var builder = WebApplication.CreateBuilder(args);
+
+// --- 1. CONFIGURACIÓN DE SERVICIOS ---
 
 // Configuración de servicio CORS global
 builder.Services.AddCors(options =>
@@ -14,23 +17,29 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Connection string:
-var connectionString = builder.Configuration.GetConnectionString("swuDB");
+// Connection string, mismo que en appsettings
+var connectionString = builder.Configuration.GetConnectionString("SWUPersonalApi");
 
+// Dependencias Repositories
 builder.Services.AddScoped<IRepository<Card>, CardRepository>(provider =>
-new CardRepository(connectionString));
+    new CardRepository(connectionString!));
 
-// builder.Services.AddScoped<IColeccionRepository, ColeccionRepository>(provider =>
-// new ColeccionRepository(connectionString));
+builder.Services.AddScoped<IRepository<Collection>, CollectionRepository>(provider =>
+    new CollectionRepository(connectionString!));
 
-// Otros servicios
+// Dependencias Services
+builder.Services.AddScoped<IService<Card>, CardService>();
+builder.Services.AddScoped<IService<Collection>, CollectionService>();
+
+
+// Otros servicios del Framework
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Pipeline de la app
+
 if (app.Environment.IsDevelopment())
 {
     app.UseStaticFiles();
@@ -42,9 +51,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// CORS
 app.UseCors();
-
 app.UseAuthorization();
 
 app.MapGet("/", context =>

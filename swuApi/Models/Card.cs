@@ -14,9 +14,9 @@ namespace swuApi.Models
         public int Copies { get; set; }
         public decimal Price { get; set; } 
         public DateTime DateAcquired { get; set; } 
-        public bool IsPromo { get; set; } 
+        public bool IsPromo { get; set; } = false;
         public int CollectionId { get; set; }
-        public Colection? Colection { get; set; }
+        public Collection? Collection { get; set; }
 
         public Card() 
         {

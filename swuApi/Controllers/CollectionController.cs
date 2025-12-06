@@ -1,44 +1,45 @@
 using Microsoft.AspNetCore.Mvc;
 using swuApi.Models;
+using swuApi.DTOs;
 using swuApi.Services;
 
 namespace swuApi.Controllers
 {
     [ApiController]
-    // La ruta será /api/Colections
+    // La ruta será /api/Collections
     [Route("api/[controller]")] 
-    public class ColectionController : ControllerBase
+    public class CollectionController : ControllerBase
     {
         // Inyectamos el Servicio, que contendrá la lógica de negocio y usará el Repositorio.
-        private readonly IService<Colection> _colectionService;
+        private readonly IService<Collection> _collectionService;
 
-        public ColectionController(IService<Colection> colectionService)
+        public CollectionController(IService<Collection> collectionService)
         {
-            _colectionService = colectionService;
+            _collectionService = collectionService;
         }
 
-        // GET: api/Colections
+        // GET: api/Collections
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Colection>>> Get()
+        public async Task<ActionResult<IEnumerable<Collection>>> Get()
         {
-            var colections = await _colectionService.GetAllAsync();
-            return Ok(colections);
+            var collections = await _collectionService.GetAllAsync();
+            return Ok(collections);
         }
 
-        // GET: api/Colections/5 (uno específico)
+        // GET: api/Collections/5 (uno específico)
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Colection>> Get(int id)
+        public async Task<ActionResult<Collection>> Get(int id)
         {
             try
             {
-                var colection = await _colectionService.GetByIdAsync(id);
-                if (colection == null)
+                var collection = await _collectionService.GetByIdAsync(id);
+                if (collection == null)
                     return NotFound();
 
-                return Ok(colection);
+                return Ok(collection);
             }
             // Capturar la excepción si el ID es inválido
             catch (ArgumentException ex) 
@@ -47,41 +48,55 @@ namespace swuApi.Controllers
             }
         }
 
-        // POST: api/Colections
+        // POST: api/Collections
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] Colection colection)
+        public async Task<IActionResult> Post([FromBody] CollectionCreationDTO collectionDTO)
         {
+            // Mapeao del DTO al Modelo Collection
+            var collection = new Collection
+            {
+                CollectionName = collectionDTO.CollectionName,
+                Color = collectionDTO.Color,
+                NumCards = collectionDTO.NumCards,
+                EstimatedValue = collectionDTO.EstimatedValue,
+                
+                // Usamos el valor del DTO, si es nulo, el servicio pondrá UtcNow
+                CreationDate = collectionDTO.CreationDate ?? default(DateTime), 
+                
+                IsComplete = collectionDTO.IsComplete,
+                
+                // Las propiedades de navegación (Cards) se omiten en la creación
+            };
+
             try
             {
-                await _colectionService.AddAsync(colection); 
+                await _collectionService.AddAsync(collection);
 
-                // Código de estado 201 Created, con la URL del nuevo recurso
-                return CreatedAtAction(nameof(Get), new { id = colection.Id }, colection); 
+                return CreatedAtAction(nameof(Get), new { id = collection.Id }, collection);
             }
-            // Capturo excepción de validación como que el nombre esté vacíoo
             catch (ArgumentException ex) 
             {
                 return BadRequest(ex.Message);
             }
         }
 
-        // PUT: api/Colections/5
+        // PUT: api/Collections/5
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(int id, [FromBody] Colection colection)
+        public async Task<IActionResult> Put(int id, [FromBody] Collection collection)
         {
-            if (id != colection.Id)
+            if (id != collection.Id)
             {
                 return BadRequest("El ID de la ruta no coincide con el ID del cuerpo.");
             }
 
             try
             {
-                await _colectionService.UpdateAsync(colection);
+                await _collectionService.UpdateAsync(collection);
                 return NoContent(); // Código de estado 204 No Content (Éxito sin contenido de respuesta)
             }
             catch (ArgumentException ex)
@@ -95,7 +110,7 @@ namespace swuApi.Controllers
         }
 
         // ------------------------------------
-        // DELETE: api/Colections/5
+        // DELETE: api/Collections/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -104,7 +119,7 @@ namespace swuApi.Controllers
         {
             try
             {
-                await _colectionService.DeleteAsync(id);
+                await _collectionService.DeleteAsync(id);
                 return NoContent(); // No content es éxito porque una petición DELETE no devuelve nada (en el cuerpo)
             }
             catch (ArgumentException ex)

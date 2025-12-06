@@ -1,2 +1,2 @@
 # Setup local db (Sql server) | Antiguo comando para levantar la DB
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=${password}$" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-CU21-ubuntu-20.04
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=${password}" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-CU21-ubuntu-20.04
