@@ -1,13 +1,13 @@
 using Microsoft.Data.SqlClient;
-using SWUPersonalApi.Models;
+using swuApi.Models;
 
-namespace SWUPersonalApi.Repositories
+namespace swuApi.Repositories
 {
-    public class CartaRepository : IRepository<Carta>
+    public class CardRepository : IRepository<Card>
     {
         private readonly string _connectionString;
 
-        public CartaRepository(string connectionString)
+        public CardRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -17,52 +17,52 @@ namespace SWUPersonalApi.Repositories
             using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
 
-            string query = "SELECT ISNULL(MAX(Id), 0) FROM Cartas";
+            string query = "SELECT ISNULL(MAX(Id), 0) FROM Cards";
             using var command = new SqlCommand(query, connection);
 
             var result = await command.ExecuteScalarAsync();
             return (int)result;
         }
 
-        public async Task<List<Carta>> GetAllAsync()
+        public async Task<List<Card>> GetAllAsync()
         {
-            var cartas = new List<Carta>();
+            var cards = new List<Card>();
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT Id, Nombre, Subtitulo, Modelo, Aspecto, NumeroCarta, Cantidad, ColeccionId FROM Cartas";
+                string query = "SELECT Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, ColectionId FROM Cards";
                 using (var command = new SqlCommand(query, connection))
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
                     {
-                        var carta = new Carta
+                        var card = new Card
                         {
                             Id = reader.GetInt32(0),
-                            Nombre = reader.GetString(1),
-                            Subtitulo = reader.GetString(2),
-                            Modelo = reader.GetString(3),
-                            Aspecto = reader.GetString(4),
-                            NumeroCarta = reader.GetInt32(5),
-                            Cantidad = reader.GetInt32(6),
-                            ColeccionId = reader.GetInt32(7)
+                            CardName = reader.GetString(1),
+                            Subtitle = reader.GetString(2),
+                            Model = reader.GetString(3),
+                            Aspect = reader.GetString(4),
+                            CardNumber = reader.GetInt32(5),
+                            Copies = reader.GetInt32(6),
+                            ColectionId = reader.GetInt32(7)
                         };
-                        cartas.Add(carta);
+                        cards.Add(card);
                     }
                 }
             }
-            return cartas;
+            return cards;
         }
 
-        public async Task<Carta> GetByIdAsync(int id)
+        public async Task<Card> GetByIdAsync(int id)
         {
-            Carta carta = null;
+            Card card = null;
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                string query = "SELECT Id, Nombre, Subtitulo, Modelo, Aspecto, NumeroCarta, Cantidad, ColeccionId FROM Cartas WHERE Id = @Id";
+                string query = "SELECT Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, ColectionId FROM Cards WHERE Id = @Id";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
@@ -70,66 +70,66 @@ namespace SWUPersonalApi.Repositories
                     {
                         if (await reader.ReadAsync())
                         {
-                            carta = new Carta
+                            card = new Card
                             {
                                 Id = reader.GetInt32(0),
-                                Nombre = reader.GetString(1),
-                                Subtitulo = reader.GetString(2),
-                                Modelo = reader.GetString(3),
-                                Aspecto = reader.GetString(4),
-                                NumeroCarta = reader.GetInt32(5),
-                                Cantidad = reader.GetInt32(6),
-                                ColeccionId = reader.GetInt32(7)
+                                CardName = reader.GetString(1),
+                                Subtitle = reader.GetString(2),
+                                Model = reader.GetString(3),
+                                Aspect = reader.GetString(4),
+                                CardNumber = reader.GetInt32(5),
+                                Copies = reader.GetInt32(6),
+                                ColectionId = reader.GetInt32(7)
                             };
                         }
                     }
                 }
             }
-            return carta;
+            return card;
         }
 
-        public async Task AddAsync(Carta carta)
+        public async Task AddAsync(Card card)
         {
             using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
 
             // Obtener el max Id actual + 1
             int newId = await GetMaxIdAsync() + 1;
-            carta.Id = newId;
+            card.Id = newId;
 
-            string query = @"INSERT INTO Cartas (Id, Nombre, Subtitulo, Modelo, Aspecto, NumeroCarta, Cantidad, ColeccionId) 
-                            VALUES (@Id, @Nombre, @Subtitulo, @Modelo, @Aspecto, @NumeroCarta, @Cantidad, @ColeccionId)";
+            string query = @"INSERT INTO Cards (Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, ColectionId) 
+                            VALUES (@Id, @CardName, @Subtitle, @Model, @Aspect, @CardNumber, @Copies, @ColectionId)";
             using var command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@Id", carta.Id);
-            command.Parameters.AddWithValue("@Nombre", carta.Nombre);
-            command.Parameters.AddWithValue("@Subtitulo", carta.Subtitulo ?? string.Empty);
-            command.Parameters.AddWithValue("@Modelo", carta.Modelo ?? string.Empty);
-            command.Parameters.AddWithValue("@Aspecto", carta.Aspecto ?? string.Empty);
-            command.Parameters.AddWithValue("@NumeroCarta", carta.NumeroCarta);
-            command.Parameters.AddWithValue("@Cantidad", carta.Cantidad);
-            command.Parameters.AddWithValue("@ColeccionId", carta.ColeccionId);
+            command.Parameters.AddWithValue("@Id", card.Id);
+            command.Parameters.AddWithValue("@CardName", card.CardName);
+            command.Parameters.AddWithValue("@Subtitle", card.Subtitle ?? string.Empty);
+            command.Parameters.AddWithValue("@Model", card.Model ?? string.Empty);
+            command.Parameters.AddWithValue("@Aspect", card.Aspect ?? string.Empty);
+            command.Parameters.AddWithValue("@CardNumber", card.CardNumber);
+            command.Parameters.AddWithValue("@Copies", card.Copies);
+            command.Parameters.AddWithValue("@ColectionId", card.ColectionId);
 
             await command.ExecuteNonQueryAsync();
         }
 
-        public async Task UpdateAsync(Carta carta)
+        public async Task UpdateAsync(Card card)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                string query = @"UPDATE Cartas SET Nombre=@Nombre, Subtitulo=@Subtitulo, Modelo=@Modelo, Aspecto=@Aspecto, 
-                                 NumeroCarta=@NumeroCarta, Cantidad=@Cantidad, ColeccionId=@ColeccionId WHERE Id=@Id";
+                string query = @"UPDATE Cards SET CardName=@CardName, Subtitle=@Subtitle, Model=@Model, Aspect=@Aspect, 
+                                 CardNumber=@CardNumber, Copies=@Copies, ColectionId=@ColectionId WHERE Id=@Id";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", carta.Id);
-                    command.Parameters.AddWithValue("@Nombre", carta.Nombre);
-                    command.Parameters.AddWithValue("@Subtitulo", carta.Subtitulo ?? string.Empty);
-                    command.Parameters.AddWithValue("@Modelo", carta.Modelo ?? string.Empty);
-                    command.Parameters.AddWithValue("@Aspecto", carta.Aspecto ?? string.Empty);
-                    command.Parameters.AddWithValue("@NumeroCarta", carta.NumeroCarta);
-                    command.Parameters.AddWithValue("@Cantidad", carta.Cantidad);
-                    command.Parameters.AddWithValue("@ColeccionId", carta.ColeccionId);
+                    command.Parameters.AddWithValue("@Id", card.Id);
+                    command.Parameters.AddWithValue("@CardName", card.CardName);
+                    command.Parameters.AddWithValue("@Subtitle", card.Subtitle ?? string.Empty);
+                    command.Parameters.AddWithValue("@Model", card.Model ?? string.Empty);
+                    command.Parameters.AddWithValue("@Aspect", card.Aspect ?? string.Empty);
+                    command.Parameters.AddWithValue("@CardNumber", card.CardNumber);
+                    command.Parameters.AddWithValue("@Copies", card.Copies);
+                    command.Parameters.AddWithValue("@ColectionId", card.ColectionId);
                     await command.ExecuteNonQueryAsync();
                 }
             }
@@ -140,7 +140,7 @@ namespace SWUPersonalApi.Repositories
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                string query = "DELETE FROM Cartas WHERE Id = @Id";
+                string query = "DELETE FROM Cards WHERE Id = @Id";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
@@ -149,22 +149,22 @@ namespace SWUPersonalApi.Repositories
             }
         }
 
-        public IEnumerable<Carta> GetAll()
+        public IEnumerable<Card> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Carta GetById(int id)
+        public Card GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void Add(Carta entity)
+        public void Add(Card entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(Carta entity)
+        public void Update(Card entity)
         {
             throw new NotImplementedException();
         }
