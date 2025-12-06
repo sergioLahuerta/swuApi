@@ -58,6 +58,6 @@ VALUES
 ('Luke Skywalker', 'Jedi Knight', 'Unit', 'Vigilance', 5, 1, 1, 15.00, GETDATE(), 0),
 ('Darth Vader', 'Dark Lord', 'Unit', 'Command', 1, 1, 1, 30.50, GETDATE(), 0),
 ('Fighter Wing', NULL, 'Starship', 'Aggression', 150, 2, 2, 5.00, GETDATE(), 0),
-('Moff Gideon', 'Imperial Commander', 'Leader', 'Command', 10, 1, 2, 20.00, GETDATE(), 1); -- Carta promocional de ejemplo
+('Moff Gideon', 'Imperial Commander', 'Leader', 'Command', 10, 1, 2, 20.00, GETDATE(), 1);
 
 SELECT * FROM Cards;

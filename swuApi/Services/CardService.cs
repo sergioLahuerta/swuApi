@@ -39,10 +39,24 @@ namespace swuApi.Services
             // Validación por nombre, no puede estar vació, tiene que tener un nombre
             if (string.IsNullOrWhiteSpace(card.CardName))
                 throw new ArgumentException("El nombre del card no puede estar vacío.", nameof(card.CardName));
+
+            // Validación Aspectos de una una carta
+            int aspectValue = (int)card.Aspect;
+
+            // Conteo del número de bits (de unos) activos
+            int activeAspects = System.Numerics.BitOperations.PopCount((uint)aspectValue);
+
+            // Si hay más de 2 bits encendidos
+            if (activeAspects > 2)
+            {
+                throw new ArgumentException("Una carta no puede tener más de dos Aspectos", nameof(card.Aspect));
+            }
             
             // Validación precio, si es negativo se lanza la excepción
             if (card.Price < 0)
+            {
                 throw new ArgumentException("El precio de la carta no puede ser negativo.", nameof(card.Price));
+            }
             
             // Validación por fecha, si el usuario no introduce una, por defecto la de ese mismo momento
             if (card.DateAcquired == default(DateTime))
