@@ -10,7 +10,7 @@ namespace swuApi.Models
         public int CardNumber { get; set; }
         public int Copies { get; set; }
         public int ColectionId { get; set; }
-        // public Colection? Colection { get; set; }
+        public Colection? Colection { get; set; }
         public Card() { }
     }
 }
