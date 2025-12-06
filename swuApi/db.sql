@@ -11,7 +11,10 @@ CREATE TABLE Collections (
     Id INT PRIMARY KEY,
     CollectionName NVARCHAR(100) NOT NULL,
     Color NVARCHAR(100),
-    NumCards INT NOT NULL
+    NumCards INT NOT NULL,
+    EstimatedValue DECIMAL(10, 2) NOT NULL,
+    CreationDate DATETIME NOT NULL,
+    IsComplete BOOLEAN NOT NULL
 );
 
 SELECT * FROM Collections;
@@ -26,6 +29,9 @@ CREATE TABLE Cards (
     CardNumber INT NOT NULL,
     Copies INT NOT NULL DEFAULT 0,
     CollectionId INT NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    DateAcquired DATETIME NOT NULL,
+    IsPromo BOOLEAN NOT NULL,
     FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
 );
 
