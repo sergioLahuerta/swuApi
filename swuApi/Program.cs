@@ -24,12 +24,12 @@ var connectionString = builder.Configuration.GetConnectionString("SWUPersonalApi
 builder.Services.AddScoped<IRepository<Card>, CardRepository>(provider =>
     new CardRepository(connectionString!));
 
-builder.Services.AddScoped<IRepository<Colection>, ColectionRepository>(provider =>
-    new ColectionRepository(connectionString!));
+builder.Services.AddScoped<IRepository<Collection>, CollectionRepository>(provider =>
+    new CollectionRepository(connectionString!));
 
 // Dependencias Services
 builder.Services.AddScoped<IService<Card>, CardService>();
-builder.Services.AddScoped<IService<Colection>, ColectionService>();
+builder.Services.AddScoped<IService<Collection>, CollectionService>();
 
 
 // Otros servicios del Framework
