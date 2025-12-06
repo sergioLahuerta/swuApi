@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using swuApi.Enums;
 
 namespace swuApi.DTOs
 {
@@ -7,8 +8,9 @@ namespace swuApi.DTOs
     {
         public string CardName { get; set; } = string.Empty;
         public string? Subtitle { get; set; }
-        public string Model { get; set; } = string.Empty;
-        public string? Aspect { get; set; }
+        public CardModelType Model { get; set; }
+        public CardAspectType Aspect { get; set; }
+        public CardRarityType Rarity { get; set; } = CardRarityType.Common;
         public int CardNumber { get; set; }
         public int Copies { get; set; } = 0;
         public decimal Price { get; set; }
