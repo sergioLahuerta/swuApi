@@ -5,79 +5,79 @@ using System.Collections.Generic;
 
 namespace swuApi.Services
 {
-    public class ColectionService : IService<Colection>
+    public class CollectionService : IService<Collection>
     {
-        private readonly IRepository<Colection> _colectionRepository;
+        private readonly IRepository<Collection> _collectionRepository;
 
-        public ColectionService(IRepository<Colection> colectionRepository)
+        public CollectionService(IRepository<Collection> collectionRepository)
         {
-            _colectionRepository = colectionRepository;
+            _collectionRepository = collectionRepository;
         }
 
         // GetFilteredAsync (Implementación del Requisito de Búsqueda)
-        public async Task<List<Colection>> GetFilteredAsync(string? filterField, string? filterValue, string? sortField, string? sortDirection)
+        public async Task<List<Collection>> GetFilteredAsync(string? filterField, string? filterValue, string? sortField, string? sortDirection)
         {
-            return await _colectionRepository.GetFilteredAsync(filterField, filterValue, sortField, sortDirection);
+            return await _collectionRepository.GetFilteredAsync(filterField, filterValue, sortField, sortDirection);
         }
 
         // GET: GetAllAsync
-        public async Task<List<Colection>> GetAllAsync()
+        public async Task<List<Collection>> GetAllAsync()
         {
-            return await _colectionRepository.GetAllAsync();
+            return await _collectionRepository.GetAllAsync();
         }
 
         // GET: GetByIdAsync
-        public async Task<Colection?> GetByIdAsync(int id)
+        public async Task<Collection?> GetByIdAsync(int id)
         {
             if (id <= 0)
                 throw new ArgumentException("El ID de la colección debe ser mayor que cero.", nameof(id));
 
-            var colection = await _colectionRepository.GetByIdAsync(id);
-            return colection;
+            var collection = await _collectionRepository.GetByIdAsync(id);
+            return collection;
         }
 
         // POST: AddAsync
-        public async Task AddAsync(Colection colection)
+        public async Task AddAsync(Collection collection)
         {
             // Mismas validaxiones que en CardService.cs
-            if (string.IsNullOrWhiteSpace(colection.CollectionName))
-                throw new ArgumentException("El nombre de la colección no puede estar vacío.", nameof(colection.CollectionName));
+            if (string.IsNullOrWhiteSpace(collection.CollectionName))
+                throw new ArgumentException("El nombre de la colección no puede estar vacío.", nameof(collection.CollectionName));
             
-            if (colection.EstimatedValue < 0)
-                throw new ArgumentException("El valor estimado no puede ser negativo.", nameof(colection.EstimatedValue));
+            if (collection.EstimatedValue < 0)
+                throw new ArgumentException("El valor estimado no puede ser negativo.", nameof(collection.EstimatedValue));
 
-            if (colection.CreationDate == default(DateTime))
+            if (collection.CreationDate == default(DateTime))
             {
-                colection.CreationDate = DateTime.UtcNow;
+                collection.CreationDate = DateTime.UtcNow;
             }
 
-            if (colection.CreationDate > DateTime.UtcNow)
-                throw new ArgumentException("La fecha de creación no puede ser en el futuro.", nameof(colection.CreationDate));
+            if (collection.CreationDate > DateTime.UtcNow)
+                throw new ArgumentException("La fecha de creación no puede ser en el futuro.", nameof(collection.CreationDate));
             
-            await _colectionRepository.AddAsync(colection);
+            await _collectionRepository.AddAsync(collection);
         }
 
         // PUT: UpdateAsync
-        public async Task UpdateAsync(Colection colection)
+        public async Task UpdateAsync(Collection collection)
         {
-            if (colection.Id <= 0)
-                throw new ArgumentException("El ID no es válido para actualización.", nameof(colection.Id));
+            if (collection.Id <= 0)
+                throw new ArgumentException("El ID no es válido para actualización.", nameof(collection.Id));
 
             // Validación de existencia antes de actualizar
-            var existing = await _colectionRepository.GetByIdAsync(colection.Id);
+            var existing = await _collectionRepository.GetByIdAsync(collection.Id);
             if (existing == null)
             {
-                throw new KeyNotFoundException($"Colección con ID {colection.Id} no encontrada para actualización.");
+                throw new KeyNotFoundException($"Colección con ID {collection.Id} no encontrada para actualización.");
             }
             
             // Misma validación que en CardService.cs, que el nombre no puede estar vació
-            if (string.IsNullOrWhiteSpace(colection.CollectionName))
-                throw new ArgumentException("El nombre de la colección no puede estar vacío.", nameof(colection.CollectionName));
+            if (string.IsNullOrWhiteSpace(collection.CollectionName))
+                throw new ArgumentException("El nombre de la colección no puede estar vacío.", nameof(collection.CollectionName));
             
-            if (colection.EstimatedValue < 0)
-                throw new ArgumentException("El valor estimado no puede ser negativo.", nameof(colection.EstimatedValue));
+            if (collection.EstimatedValue < 0)
+                throw new ArgumentException("El valor estimado no puede ser negativo.", nameof(collection.EstimatedValue));
 
-            await _colectionRepository.UpdateAsync(colection);
+            await _collectionRepository.UpdateAsync(collection);
         }
 
         // DELETE: DeleteAsync
@@ -87,7 +87,7 @@ namespace swuApi.Services
                 throw new ArgumentException("El ID no es válido para eliminación.", nameof(id));
 
             // Validación de existencia antes de eliminar
-            var existing = await _colectionRepository.GetByIdAsync(id);
+            var existing = await _collectionRepository.GetByIdAsync(id);
             if (existing == null)
             {
                 throw new KeyNotFoundException($"Colección con ID {id} no encontrada para eliminación.");
@@ -97,7 +97,7 @@ namespace swuApi.Services
             // if (existing.NumCards > 0) 
             //    throw new InvalidOperationException("No se puede eliminar la colección si tiene cartas.");
             
-            await _colectionRepository.DeleteAsync(id);
+            await _collectionRepository.DeleteAsync(id);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace swuApi.Models
         public DateTime DateAcquired { get; set; } 
         public bool IsPromo { get; set; } = false;
         public int CollectionId { get; set; }
-        public Colection? Colection { get; set; }
+        public Collection? Collection { get; set; }
 
         public Card() 
         {

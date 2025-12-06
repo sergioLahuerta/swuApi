@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace swuApi.Models
 {
-    public class Colection
+    public class Collection
     {
         public int Id { get; set; } 
         public string CollectionName { get; set; } = string.Empty;
@@ -15,7 +15,7 @@ namespace swuApi.Models
         public bool IsComplete { get; set; } 
         public ICollection<Card> Cards { get; set; }
 
-        public Colection()
+        public Collection()
         {
             Cards = new List<Card>();
             CreationDate = DateTime.Now;

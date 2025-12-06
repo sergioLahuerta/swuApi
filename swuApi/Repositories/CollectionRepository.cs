@@ -5,7 +5,7 @@ using System.Data;
 
 namespace swuApi.Repositories
 {
-    public class ColectionRepository : IRepository<Colection>
+    public class CollectionRepository : IRepository<Collection>
     {
         private readonly string _connectionString;
         
@@ -15,7 +15,7 @@ namespace swuApi.Repositories
             "CollectionName", "Color", "NumCards", "EstimatedValue", "CreationDate", "IsComplete"
         };
 
-        public ColectionRepository(string connectionString)
+        public CollectionRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -33,9 +33,9 @@ namespace swuApi.Repositories
             return (int)result;
         }
 
-        private Colection MapToColection(SqlDataReader reader)
+        private Collection MapToCollection(SqlDataReader reader)
         {
-            return new Colection
+            return new Collection
             {
                 Id = reader.GetInt32(0),
                 CollectionName = reader.GetString(1),
@@ -48,9 +48,9 @@ namespace swuApi.Repositories
         }
         
         // GET: Implementación de filtraje y ordenación
-        public async Task<List<Colection>> GetFilteredAsync(string? filterField, string? filterValue, string? sortField, string? sortDirection)
+        public async Task<List<Collection>> GetFilteredAsync(string? filterField, string? filterValue, string? sortField, string? sortDirection)
         {
-            var colections = new List<Colection>();
+            var collections = new List<Collection>();
             var whereClause = "";
             var orderByClause = "";
             var parameters = new Dictionary<string, object>();
@@ -90,20 +90,20 @@ namespace swuApi.Repositories
                     {
                         while (await reader.ReadAsync())
                         {
-                            colections.Add(MapToColection(reader));
+                            collections.Add(MapToCollection(reader));
                         }
                     }
                 }
             }
-            return colections;
+            return collections;
         }
 
 
         // GET: GetAllAsync
-        public async Task<List<Colection>> GetAllAsync()
+        public async Task<List<Collection>> GetAllAsync()
         {
             // Reutilizo la lógica del mapeo
-            var colections = new List<Colection>();
+            var collections = new List<Collection>();
 
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -117,17 +117,17 @@ namespace swuApi.Repositories
                 {
                     while (await reader.ReadAsync())
                     {
-                        colections.Add(MapToColection(reader));
+                        collections.Add(MapToCollection(reader));
                     }
                 }
             }
-            return colections;
+            return collections;
         }
 
         // GET: GetByIdAsync
-        public async Task<Colection?> GetByIdAsync(int id)
+        public async Task<Collection?> GetByIdAsync(int id)
         {
-            Colection? colection = null;
+            Collection? collection = null;
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
@@ -142,40 +142,40 @@ namespace swuApi.Repositories
                     {
                         if (await reader.ReadAsync())
                         {
-                            colection = MapToColection(reader);
+                            collection = MapToCollection(reader);
                         }
                     }
                 }
             }
-            return colection;
+            return collection;
         }
 
         // POST: AddAsync
-        public async Task AddAsync(Colection colection)
+        public async Task AddAsync(Collection collection)
         {
             using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
 
             int newId = await GetMaxIdAsync() + 1;
-            colection.Id = newId;
+            collection.Id = newId;
 
             string query = @"INSERT INTO Collections (Id, CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete) 
                              VALUES (@Id, @CollectionName, @Color, @NumCards, @EstimatedValue, @CreationDate, @IsComplete)";
             using var command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@Id", colection.Id);
-            command.Parameters.AddWithValue("@CollectionName", colection.CollectionName);
-            command.Parameters.AddWithValue("@Color", colection.Color ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@NumCards", colection.NumCards);
-            command.Parameters.AddWithValue("@EstimatedValue", colection.EstimatedValue);
-            command.Parameters.AddWithValue("@CreationDate", colection.CreationDate);
-            command.Parameters.AddWithValue("@IsComplete", colection.IsComplete);
+            command.Parameters.AddWithValue("@Id", collection.Id);
+            command.Parameters.AddWithValue("@CollectionName", collection.CollectionName);
+            command.Parameters.AddWithValue("@Color", collection.Color ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@NumCards", collection.NumCards);
+            command.Parameters.AddWithValue("@EstimatedValue", collection.EstimatedValue);
+            command.Parameters.AddWithValue("@CreationDate", collection.CreationDate);
+            command.Parameters.AddWithValue("@IsComplete", collection.IsComplete);
 
             await command.ExecuteNonQueryAsync();
         }
 
         // PUT: UpdateAsync
-        public async Task UpdateAsync(Colection colection)
+        public async Task UpdateAsync(Collection collection)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -185,13 +185,13 @@ namespace swuApi.Repositories
                                  WHERE Id=@Id";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", colection.Id);
-                    command.Parameters.AddWithValue("@CollectionName", colection.CollectionName);
-                    command.Parameters.AddWithValue("@Color", colection.Color ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@NumCards", colection.NumCards);
-                    command.Parameters.AddWithValue("@EstimatedValue", colection.EstimatedValue);
-                    command.Parameters.AddWithValue("@CreationDate", colection.CreationDate);
-                    command.Parameters.AddWithValue("@IsComplete", colection.IsComplete);
+                    command.Parameters.AddWithValue("@Id", collection.Id);
+                    command.Parameters.AddWithValue("@CollectionName", collection.CollectionName);
+                    command.Parameters.AddWithValue("@Color", collection.Color ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@NumCards", collection.NumCards);
+                    command.Parameters.AddWithValue("@EstimatedValue", collection.EstimatedValue);
+                    command.Parameters.AddWithValue("@CreationDate", collection.CreationDate);
+                    command.Parameters.AddWithValue("@IsComplete", collection.IsComplete);
 
                     await command.ExecuteNonQueryAsync();
                 }
