@@ -1,5 +1,5 @@
 using swuApi.Models;
-using swuApi.Services;
+using swuApi.Repositories;
 
 namespace swuApi.Services
 {
@@ -51,10 +51,6 @@ namespace swuApi.Services
                 throw new ArgumentException("El ID no es válido para eliminación.");
 
             await _cardRepository.DeleteAsync(id);
-        }
-
-        public async Task InicializarDatosAsync() {
-            await _cardRepository.InicializarDatosAsync();
         }
     }
 }

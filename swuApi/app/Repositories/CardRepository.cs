@@ -148,30 +148,5 @@ namespace swuApi.Repositories
                 }
             }
         }
-
-        public IEnumerable<Card> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Card GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Add(Card entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(Card entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
