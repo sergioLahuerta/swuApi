@@ -1,20 +1,17 @@
-
 -- Creo la Base de Datos (solo si no existe)
 IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'swuDB')
     CREATE DATABASE swuDB;
 
 USE swuDB;
 
-
 SELECT name, database_id, create_date 
 FROM sys.databases 
 WHERE name = 'swuDB';
 
-
 /* Función Helper para eliminar tablas en orden si existen, respetando las FK */
 IF OBJECT_ID('swuDB.dbo.Cards', 'U') IS NOT NULL DROP TABLE Cards;
+IF OBJECT_ID('swuDB.dbo.Packs', 'U') IS NOT NULL DROP TABLE Packs;
 IF OBJECT_ID('swuDB.dbo.Collections', 'U') IS NOT NULL DROP TABLE Collections;
-
 
 /*------------- Colecciones -------------*/
 
@@ -35,8 +32,28 @@ VALUES
 
 SELECT * FROM Collections;
 
+/*------------- Sobres (Packs) -------------*/
 
-/*------------- Cartas -------------*/
+CREATE TABLE Packs (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    PackName NVARCHAR(100) NOT NULL,
+    NumberOfCards INT NOT NULL CHECK (NumberOfCards = 16) DEFAULT 16,
+    ShowcaseRarityOdds INT NOT NULL CHECK (ShowcaseRarityOdds >= 1),
+    GuaranteesRare BIT NOT NULL DEFAULT 1,
+    Price DECIMAL(10, 2) NOT NULL CHECK (Price >= 0),
+    ReleaseDate DATETIME NOT NULL,
+    CollectionId INT NOT NULL,
+    FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
+);
+
+INSERT INTO Packs (PackName, NumberOfCards, ShowcaseRarityOdds, Price, ReleaseDate, CollectionId)
+VALUES
+('Booster Pack SoR', 16, 288, 4.99, GETDATE(), 1),
+('Booster Pack SoG', 16, 288, 4.99, GETDATE(), 2),
+
+SELECT * FROM Packs;
+
+/*------------- Cartas (Cards) -------------*/
 
 CREATE TABLE Cards (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -44,21 +61,21 @@ CREATE TABLE Cards (
     Subtitle NVARCHAR(100) NULL,
     Model NVARCHAR(50) NOT NULL,
     Aspect NVARCHAR(50) NULL,
+    Rarity NVARCHAR(50) NOT NULL DEFAULT 'Common', 
     CardNumber INT NOT NULL,
     Copies INT NOT NULL DEFAULT 0,
     CollectionId INT NOT NULL,
     Price DECIMAL(10, 2) NOT NULL CHECK (Price >= 0),
     DateAcquired DATETIME NOT NULL,
     IsPromo BIT NOT NULL DEFAULT 0,
-    
     FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
 );
 
-INSERT INTO Cards (CardName, Subtitle, Model, Aspect, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo)
+INSERT INTO Cards (CardName, Subtitle, Model, Aspect, Rarity, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo)
 VALUES
-('Luke Skywalker', 'Jedi Knight', 'Unit', 'Vigilance', 5, 1, 1, 15.00, GETDATE(), 0),
-('Darth Vader', 'Dark Lord', 'Unit', 'Command', 1, 1, 1, 30.50, GETDATE(), 0),
-('Fighter Wing', NULL, 'Starship', 'Aggression', 150, 2, 2, 5.00, GETDATE(), 0),
-('Moff Gideon', 'Imperial Commander', 'Leader', 'Command', 10, 1, 2, 20.00, GETDATE(), 1);
+('Luke Skywalker', 'Jedi Knight', 'Unit', 'Vigilance', 'Legendary', 5, 1, 1, 15.00, GETDATE(), 0),
+('Darth Vader', 'Dark Lord', 'Unit', 'Command', 'Legendary', 1, 1, 1, 30.50, GETDATE(), 0),
+('Fighter Wing', NULL, 'Starship', 'Aggression', 'Common', 150, 2, 2, 5.00, GETDATE(), 0),
+('Moff Gideon', 'Imperial Commander', 'Leader', 'Command', 'Rare', 10, 1, 2, 20.00, GETDATE(), 1);
 
 SELECT * FROM Cards;
