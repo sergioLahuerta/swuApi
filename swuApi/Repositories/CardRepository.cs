@@ -12,6 +12,7 @@ namespace swuApi.Repositories
             _connectionString = connectionString;
         }
 
+        // Método para obtener el ID máximo
         public async Task<int> GetMaxIdAsync()
         {
             using var connection = new SqlConnection(_connectionString);
@@ -24,6 +25,7 @@ namespace swuApi.Repositories
             return (int)result;
         }
 
+        // GetAllAsync: Obtener todas las Cartas
         public async Task<List<Card>> GetAllAsync()
         {
             var cards = new List<Card>();
@@ -32,7 +34,11 @@ namespace swuApi.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, ColectionId FROM Cards";
+                string query = @"
+                    SELECT Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, ColectionId,
+                           Price, DateAcquired, IsPromo 
+                    FROM Cards";
+                
                 using (var command = new SqlCommand(query, connection))
                 using (var reader = await command.ExecuteReaderAsync())
                 {
@@ -42,12 +48,15 @@ namespace swuApi.Repositories
                         {
                             Id = reader.GetInt32(0),
                             CardName = reader.GetString(1),
-                            Subtitle = reader.GetString(2),
+                            Subtitle = reader.IsDBNull(2) ? null : reader.GetString(2), 
                             Model = reader.GetString(3),
-                            Aspect = reader.GetString(4),
+                            Aspect = reader.IsDBNull(4) ? null : reader.GetString(4),
                             CardNumber = reader.GetInt32(5),
                             Copies = reader.GetInt32(6),
-                            ColectionId = reader.GetInt32(7)
+                            ColectionId = reader.GetInt32(7),
+                            Price = reader.GetDecimal(8), 
+                            DateAcquired = reader.GetDateTime(9),
+                            IsPromo = reader.GetBoolean(10)
                         };
                         cards.Add(card);
                     }
@@ -56,13 +65,19 @@ namespace swuApi.Repositories
             return cards;
         }
 
+        // GetByIdAsync: Obtener Carta por ID
         public async Task<Card> GetByIdAsync(int id)
         {
             Card card = null;
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                string query = "SELECT Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, ColectionId FROM Cards WHERE Id = @Id";
+                
+                string query = @"
+                    SELECT Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, ColectionId, 
+                           Price, DateAcquired, IsPromo 
+                    FROM Cards WHERE Id = @Id";
+                
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
@@ -74,12 +89,15 @@ namespace swuApi.Repositories
                             {
                                 Id = reader.GetInt32(0),
                                 CardName = reader.GetString(1),
-                                Subtitle = reader.GetString(2),
+                                Subtitle = reader.IsDBNull(2) ? null : reader.GetString(2),
                                 Model = reader.GetString(3),
-                                Aspect = reader.GetString(4),
+                                Aspect = reader.IsDBNull(4) ? null : reader.GetString(4),
                                 CardNumber = reader.GetInt32(5),
                                 Copies = reader.GetInt32(6),
-                                ColectionId = reader.GetInt32(7)
+                                ColectionId = reader.GetInt32(7),
+                                Price = reader.GetDecimal(8),
+                                DateAcquired = reader.GetDateTime(9),
+                                IsPromo = reader.GetBoolean(10)
                             };
                         }
                     }
@@ -88,53 +106,66 @@ namespace swuApi.Repositories
             return card;
         }
 
+        // AddAsync: Crear nueva Carta
         public async Task AddAsync(Card card)
         {
             using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
 
-            // Obtener el max Id actual + 1
             int newId = await GetMaxIdAsync() + 1;
             card.Id = newId;
 
-            string query = @"INSERT INTO Cards (Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, ColectionId) 
-                            VALUES (@Id, @CardName, @Subtitle, @Model, @Aspect, @CardNumber, @Copies, @ColectionId)";
+            string query = @"INSERT INTO Cards (Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, ColectionId, Price, DateAcquired, IsPromo) 
+                             VALUES (@Id, @CardName, @Subtitle, @Model, @Aspect, @CardNumber, @Copies, @ColectionId, @Price, @DateAcquired, @IsPromo)";
+            
             using var command = new SqlCommand(query, connection);
 
             command.Parameters.AddWithValue("@Id", card.Id);
             command.Parameters.AddWithValue("@CardName", card.CardName);
-            command.Parameters.AddWithValue("@Subtitle", card.Subtitle ?? string.Empty);
-            command.Parameters.AddWithValue("@Model", card.Model ?? string.Empty);
-            command.Parameters.AddWithValue("@Aspect", card.Aspect ?? string.Empty);
+            command.Parameters.AddWithValue("@Subtitle", card.Subtitle ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@Model", card.Model);
+            command.Parameters.AddWithValue("@Aspect", card.Aspect ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@CardNumber", card.CardNumber);
             command.Parameters.AddWithValue("@Copies", card.Copies);
             command.Parameters.AddWithValue("@ColectionId", card.ColectionId);
+            command.Parameters.AddWithValue("@Price", card.Price);
+            command.Parameters.AddWithValue("@DateAcquired", card.DateAcquired);
+            command.Parameters.AddWithValue("@IsPromo", card.IsPromo);
 
             await command.ExecuteNonQueryAsync();
         }
 
+        // UpdateAsync: Actualizar Carta existente
         public async Task UpdateAsync(Card card)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
+                
                 string query = @"UPDATE Cards SET CardName=@CardName, Subtitle=@Subtitle, Model=@Model, Aspect=@Aspect, 
-                                 CardNumber=@CardNumber, Copies=@Copies, ColectionId=@ColectionId WHERE Id=@Id";
+                                 CardNumber=@CardNumber, Copies=@Copies, ColectionId=@ColectionId, 
+                                 Price=@Price, DateAcquired=@DateAcquired, IsPromo=@IsPromo WHERE Id=@Id";
+                
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", card.Id);
                     command.Parameters.AddWithValue("@CardName", card.CardName);
-                    command.Parameters.AddWithValue("@Subtitle", card.Subtitle ?? string.Empty);
-                    command.Parameters.AddWithValue("@Model", card.Model ?? string.Empty);
-                    command.Parameters.AddWithValue("@Aspect", card.Aspect ?? string.Empty);
+                    command.Parameters.AddWithValue("@Subtitle", card.Subtitle ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Model", card.Model);
+                    command.Parameters.AddWithValue("@Aspect", card.Aspect ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@CardNumber", card.CardNumber);
                     command.Parameters.AddWithValue("@Copies", card.Copies);
                     command.Parameters.AddWithValue("@ColectionId", card.ColectionId);
+                    command.Parameters.AddWithValue("@Price", card.Price);
+                    command.Parameters.AddWithValue("@DateAcquired", card.DateAcquired);
+                    command.Parameters.AddWithValue("@IsPromo", card.IsPromo);
+                    
                     await command.ExecuteNonQueryAsync();
                 }
             }
         }
 
+        // DeleteAsync: Eliminar Carta
         public async Task DeleteAsync(int id)
         {
             using (var connection = new SqlConnection(_connectionString))
