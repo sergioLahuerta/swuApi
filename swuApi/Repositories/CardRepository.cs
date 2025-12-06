@@ -22,48 +22,46 @@ namespace swuApi.Repositories
             var cards = new List<Card>();
             
             var baseQuery = @"
-                SELECT Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, CollectionId, 
-                       Price, DateAcquired, IsPromo 
-                FROM Cards";
+                SELECT Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo FROM Cards";
             
             var whereClause = "";
             var orderByClause = "";
             var parameters = new Dictionary<string, object>();
             
-            // 2. Construir la cláusula WHERE (Filtrado)
+            // Cláusula where para filtraje
             if (!string.IsNullOrWhiteSpace(filterField) && !string.IsNullOrWhiteSpace(filterValue))
             {
-                // Seguridad: Validar que el campo existe
+                // Valido que el campo existe
                 if (ValidFields.Contains(filterField))
                 {
-                    // Usamos LIKE para búsquedas parciales
+                    // LIKE para búsquedas parciales
                     whereClause = $" WHERE {filterField} LIKE @FilterValue";
                     parameters.Add("@FilterValue", $"%{filterValue}%");
                 }
             }
 
-            // 3. Construir la cláusula ORDER BY (Ordenación)
+            // También construir la cláusula ORDER BY
             if (!string.IsNullOrWhiteSpace(sortField))
             {
-                // Seguridad: Validar que el campo existe
+                // Lo mismo
                 if (ValidFields.Contains(sortField))
                 {
-                    // Determinar la dirección (por defecto ASC)
+                    // Determinar la dirección ascendente
                     var direction = "ASC";
                     if (sortDirection != null && sortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase))
                     {
                         direction = "DESC";
                     }
                     
-                    // Nota: Se inserta el campo validado y la dirección
+                    // Inserción del campo validado y la dirección
                     orderByClause = $" ORDER BY {sortField} {direction}";
                 }
             }
 
-            // 4. Combinar la consulta
+            // Añadir a la consulta el filtrado
             string finalQuery = baseQuery + whereClause + orderByClause;
 
-            // 5. Ejecutar la consulta
+            // Ejecutarla
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
@@ -72,7 +70,7 @@ namespace swuApi.Repositories
                     // Añadir parámetros de filtrado si existen
                     foreach (var param in parameters)
                     {
-                        // Usamos AddWithValue para la seguridad contra inyección SQL
+                        // Uso AddWithValue para la seguridad contra inyección SQL
                         command.Parameters.AddWithValue(param.Key, param.Value);
                     }
 
@@ -80,7 +78,7 @@ namespace swuApi.Repositories
                     {
                         while (await reader.ReadAsync())
                         {
-                            // Mapeo de la Carta (Idéntico al GetAllAsync)
+                            // Mapeo de la Carta
                             var card = new Card
                             {
                                 Id = reader.GetInt32(0),
@@ -126,9 +124,7 @@ namespace swuApi.Repositories
                 await connection.OpenAsync();
 
                 string query = @"
-                    SELECT Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, CollectionId,
-                           Price, DateAcquired, IsPromo 
-                    FROM Cards";
+                    SELECT Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo FROM Cards";
                 
                 using (var command = new SqlCommand(query, connection))
                 using (var reader = await command.ExecuteReaderAsync())
@@ -165,9 +161,7 @@ namespace swuApi.Repositories
                 await connection.OpenAsync();
                 
                 string query = @"
-                    SELECT Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, CollectionId, 
-                           Price, DateAcquired, IsPromo 
-                    FROM Cards WHERE Id = @Id";
+                    SELECT Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo FROM Cards WHERE Id = @Id";
                 
                 using (var command = new SqlCommand(query, connection))
                 {
@@ -206,8 +200,7 @@ namespace swuApi.Repositories
             int newId = await GetMaxIdAsync() + 1;
             card.Id = newId;
 
-            string query = @"INSERT INTO Cards (Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo) 
-                             VALUES (@Id, @CardName, @Subtitle, @Model, @Aspect, @CardNumber, @Copies, @CollectionId, @Price, @DateAcquired, @IsPromo)";
+            string query = @"INSERT INTO Cards (Id, CardName, Subtitle, Model, Aspect, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo) VALUES (@Id, @CardName, @Subtitle, @Model, @Aspect, @CardNumber, @Copies, @CollectionId, @Price, @DateAcquired, @IsPromo";
             
             using var command = new SqlCommand(query, connection);
 
@@ -233,9 +226,7 @@ namespace swuApi.Repositories
             {
                 await connection.OpenAsync();
                 
-                string query = @"UPDATE Cards SET CardName=@CardName, Subtitle=@Subtitle, Model=@Model, Aspect=@Aspect, 
-                                 CardNumber=@CardNumber, Copies=@Copies, CollectionId=@CollectionId, 
-                                 Price=@Price, DateAcquired=@DateAcquired, IsPromo=@IsPromo WHERE Id=@Id";
+                string query = @"UPDATE Cards SET CardName=@CardName, Subtitle=@Subtitle, Model=@Model, Aspect=@Aspect, CardNumber=@CardNumber, Copies=@Copies, CollectionId=@CollectionId, Price=@Price, DateAcquired=@DateAcquired, IsPromo=@IsPromo WHERE Id=@Id";
                 
                 using (var command = new SqlCommand(query, connection))
                 {
