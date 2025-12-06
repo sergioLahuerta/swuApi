@@ -2,14 +2,14 @@ namespace swuApi.Models {
     public class Card
     {
         public int Id { get; set; }
-        public string Nombre { get; set; }
-        public string Subtitulo { get; set; }
-        public string Modelo { get; set; }
-        public string Aspecto { get; set; }
-        public int NumeroCarta { get; set; }
-        public int Cantidad { get; set; }
-        public int ColeccionId { get; set; }
-        public Coleccion? Coleccion { get; set; }
-        public Carta() { }
+        public string Name { get; set; }
+        public string Subtitle { get; set; }
+        public string Model { get; set; }
+        public string Aspect { get; set; }
+        public int CardNumber { get; set; }
+        public int Copies { get; set; }
+        public int ColectionId { get; set; }
+        public Colection? Colection { get; set; }
+        public Card() { }
     }
 }
