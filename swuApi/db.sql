@@ -1,3 +1,4 @@
+
 -- Creo la Base de Datos (solo si no existe)
 IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'swuDB')
     CREATE DATABASE swuDB;
@@ -10,7 +11,7 @@ FROM sys.databases
 WHERE name = 'swuDB';
 
 
--- Función Helper para eliminar tablas en orden si existen, respetando las FK
+/* Función Helper para eliminar tablas en orden si existen, respetando las FK */
 IF OBJECT_ID('swuDB.dbo.Cards', 'U') IS NOT NULL DROP TABLE Cards;
 IF OBJECT_ID('swuDB.dbo.Collections', 'U') IS NOT NULL DROP TABLE Collections;
 
