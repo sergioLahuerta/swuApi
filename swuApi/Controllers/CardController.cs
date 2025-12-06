@@ -64,6 +64,7 @@ namespace swuApi.Controllers
                 Subtitle = cardDTO.Subtitle,
                 Model = cardDTO.Model,
                 Aspect = cardDTO.Aspect,
+                Rarity = cardDTO.Rarity,
                 CardNumber = cardDTO.CardNumber,
                 Copies = cardDTO.Copies,
                 Price = cardDTO.Price,
