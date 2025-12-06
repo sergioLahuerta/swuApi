@@ -1,0 +1,467 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #26282c;
+    color: #f1f1f1;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-image: url('../src/backgroundImageHomePage2.jpg');
+    background-size: cover;
+    margin: 0;
+}
+
+h1 {
+    margin-left: 100px;
+    font-size: 2.7rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    color: #f1f1f1;
+}
+
+h3 {
+    margin-top: 0.8rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: #e8eaed;
+}
+
+.body__containerButtons--home {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-left: 100px;
+    width: fit-content;
+}
+
+.body__shadeTopBar {
+    height: 100px;
+    background: linear-gradient(
+        180deg,
+        rgba(10, 20, 40, 0.75) 0%,
+        rgba(10, 20, 40, 0.4) 40%,
+        rgba(10, 20, 40, 0.0) 100%
+    );
+}
+
+
+.body__button {
+    margin: 0.5rem 0;
+    border-radius: 1rem;
+    color: #ffffff;
+    font-size: 2rem;
+    padding: 2rem;
+    transition: transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.body__button:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.--colecciones {
+    background-color: #eb745f;
+    border: 2px solid #ffffff;
+}
+
+.--cartas {
+    background-color: #133e73;
+    border: 2px solid #ffffff;
+}
+
+.colecciones__buttons, .cartas__buttons {
+    margin: 0.5rem 0;
+    border-radius: 1rem;
+    color: #ffffff;
+    font-size: 2rem;
+    padding: 1rem;
+    width: 200px;
+    transition: transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.colecciones__buttons:hover, .cartas__buttons:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+.--verTodasColecciones {
+    background-color: #61affe;
+    border: 2px solid #ffffff;
+}
+
+.--crearColeccion, .--crearCarta {
+    background-color: #49cc90;
+    border: 2px solid #ffffff;
+}
+
+.--actualizarColeccion, .--actualizarCarta {
+    background-color: #fca130;
+    border: 2px solid #ffffff;
+}
+
+.--eliminarColeccion, .--eliminarCarta {
+    background-color: #f93e3e;
+    border: 2px solid #ffffff;
+}
+
+.row {
+    margin-left: 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-control {
+    background-color: #32343a;
+    border: 1px solid #50535a;
+    color: #f1f1f1;
+    padding: 0.7rem;
+    border-radius: 0.3rem;
+    font-size: 1.12rem;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+    border-color: #397ef6;
+    outline: none;
+    box-shadow: 0 0 0 2px #397ef644;
+}
+
+#crearCarta, #actualizarCarta, #eliminarCarta {
+    /* display: flex; */
+    display: none;
+    gap: 10px 15px;
+    flex-wrap: wrap;
+    max-width: 500px;
+}
+
+#borrarCartaForm  {
+    width: 350px;
+}
+
+.btn-primary, .btn-success {
+    border: none;
+    font-size: 1.1rem;
+    padding: 0.6rem 1.3rem;
+    margin-top: 0.4rem;
+    border-radius: 0.3rem;
+}
+
+.btn-crear {
+    background-color: #397ef6;
+    color: #fff;
+}
+.btn-crear:hover {
+    background-color: #2559c2;
+    color: #fff;
+    cursor: pointer;
+}
+
+.create {
+    background-color: #249964;
+    color: #fff;
+}
+.create:hover {
+    background-color: #156a40;
+    color: #fff;
+    cursor: pointer;
+}
+
+.delete {
+    background-color: #d32913;
+    color: #fff;
+}
+
+.delete:hover {
+    background-color: #8d1d0e;
+}
+
+.update {
+    background-color: #d39d13;
+    color: #fff;
+}
+
+.update:hover {
+    background-color: #aa811a;
+}
+
+/* .container {
+    margin-top: 2rem;
+} */
+
+.card, .col-md-6 {
+    background: transparent;
+    box-shadow: none;
+}
+
+.mb-2 {
+    margin-bottom: 1rem;
+}
+
+.form-container {
+    display: none;
+    margin-left: 3rem;
+}
+
+.col-img {
+    width: 250px;
+}
+
+.col-md-6 {
+    display: none;
+    /* display: flex; */
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0 50px;
+}
+
+.getAll-delete {
+    display: flex;
+    flex-direction: row;
+}
+
+.allFormContainer {
+    margin-top: 30px;
+}
+
+.verAll {
+    background-color: #8db563;
+    color: #fff;
+}
+
+.verAll:hover {
+    background-color: #627d46;
+    color: #fff;
+    cursor: pointer;
+}
+
+.coleccion-item {
+    height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    padding: 5px 15px;
+}
+
+.coleccion-item:hover {
+    cursor: pointer;
+}
+
+.formConResultados {
+    display: flex;
+    gap: 50px;
+}
+
+.selectsAspecto-container {
+    display: flex;
+    gap: 0 15px;
+    align-items: center
+}
+
+.aspectoSelect2 {
+    display: none;
+}
+
+.svgAspectoSelect:hover {
+    cursor: pointer;
+}
+
+.btnSvgAspectoSelectMinus {
+    display: none;
+}
+
+.btnSvgAspectoSelectMinus:hover {
+    cursor: pointer;
+}
+
+/* COMIENZO CARTA */
+.buttonsCartasContainer {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+}
+
+.carta-item {
+    color: #f0f0f0;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.carta-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    border-color: #82acdc;
+}
+
+.carta-item p {
+    margin: 0;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.carta-item p:first-child {
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #ffffff;
+    padding: 4px 8px;
+}
+
+.carta-item p:nth-child(2) {
+    font-size: 0.9em;
+    font-weight: 500;
+    color: #ffffff;
+    padding: 4px 10px;
+    border-radius: 10px;
+    margin-top: 0px;
+}
+
+.carta-item p:nth-child(3) span {
+    font-weight: 600;
+    color: #ffffff;
+    margin-left: 5px;
+}
+
+.carta-item p:nth-child(4),
+.carta-item p:nth-child(5) {
+    font-weight: 700;
+    font-size: 0.85em;
+    color: #ffffff;
+    margin-left: 5px;
+}
+/* FIN CARTA */
+
+/* COMIENZO SUBTITULO */
+.subtitulo-box-container {
+    background: linear-gradient(#a7c6d4, #53666f);
+    border: 2px solid #394764; /* borde oscuro */
+    border-radius: 6px;
+    display: inline-block;
+    padding: 4px 16px;
+    text-align: center;
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2); /* efecto de línea inferior */
+    font-family: 'Arial', sans-serif;
+}
+
+.subtitulo-box {
+    display: block;
+    color: #0c1c2b;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1.1em;
+    letter-spacing: 0.02em;
+}
+
+.subtitulo-card {
+    display: block;
+    color: #1f2e44;
+    font-size: 0.75em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+/* FIN SUBTITULO */
+
+.resultadosCartasPorColeccion {
+    display: flex;
+    gap: 20px;
+}
+
+#listaColecciones {
+    display: flex;
+    gap: 20px;
+    margin-top: 50px;
+}
+
+.form-container-eliminarCarta {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Select y Options */
+select, .form-control {
+  background-color: #191a1e;
+  padding: 10px 38px 10px 12px;
+  border: 2px solid #414868;
+  border-radius: 8px;
+  font-size: 1.1em;
+  outline: none;
+  box-shadow: 0 2px 16px rgba(68, 71, 90, 0.07);
+  transition: border 0.18s, box-shadow 0.18s;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: text;
+  position: relative;
+}
+
+.form-control::placeholder {
+    color: #dfe1e1;
+}
+
+select:focus, .form-control:focus {
+  border-color: #5688a5;
+  box-shadow: 0 0 0 2px #7dcfff33;
+}
+
+select option, .form-control option {
+  background-color: #18191b;
+  color: #ffffff;
+  font-size: 1em;
+  border-radius: 0;
+  padding: 10px;
+}
+
+select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,<svg width='20' height='16' viewBox='0 0 20 16' fill='white' xmlns='http://www.w3.org/2000/svg'><path d='M5 6L10 11L15 6' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 22px 16px;
+}
+
+/* Para evitar borde azul por defecto en Chrome al hacer clic */
+select:focus, select:active {
+  outline: none;
+  box-shadow: none;
+  border-color: #7dcfff; /* O el color que prefieras */
+}
+
+
+/* Mensajes */
+#coleccionMsgCrear, #coleccionMsgBorrar, #coleccionMsgActualizar, #coleccionMsgAll,
+#cartaMsgCrear, #cartaMsgActualizar, #cartaMsgBorrar {
+    display: none;
+    padding: 10px 15px;
+    border-radius: 15px;
+    border: 1px solid #8d1d0e;
+    background-color: #d72f19;
+    font-size: 1rem;
+    margin-top: 0.8rem;
+}
+
+/*Autofill Campo Form*/
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+    box-shadow: 0 0 0 1000px #32343a inset;
+    -webkit-text-fill-color: #f1f1f1;
+    border: 1px solid #50535a;
+}
+
+@media (max-width: 900px) {
+    .row {
+        flex-direction: column;
+    }
+    .col-md-6 {
+        width: 100%;
+    }
+}
