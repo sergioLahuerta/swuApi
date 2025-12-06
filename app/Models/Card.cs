@@ -1,4 +1,5 @@
-namespace swuApi.Models {
+namespace swuApi.Models
+{
     public class Card
     {
         public int Id { get; set; }
