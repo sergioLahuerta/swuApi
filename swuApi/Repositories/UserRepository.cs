@@ -1,11 +1,8 @@
 using Microsoft.Data.SqlClient;
 using swuApi.Models;
 using System.Data.Common;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using swuApi.Repositories;
 
-namespace UserRepository.Repositories
+namespace swuApi.Repositories
 {
     public class UserRepository : IRepository<User>
     {

@@ -1,7 +1,5 @@
 using Microsoft.Data.SqlClient;
 using swuApi.Models;
-using System.Collections.Generic;
-using System.Data;
 
 namespace swuApi.Repositories
 {

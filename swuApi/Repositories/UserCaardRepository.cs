@@ -1,8 +1,6 @@
-// En Repositories/UserCardRepository.cs
 using Microsoft.Data.SqlClient;
 using swuApi.Models;
 using System.Data.Common;
-using System.Data;
 
 namespace swuApi.Repositories
 {
