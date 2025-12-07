@@ -1,5 +1,4 @@
 using swuApi.Models;
-using System.Threading.Tasks;
 
 namespace swuApi.Repositories
 {

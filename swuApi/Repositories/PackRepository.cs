@@ -1,7 +1,5 @@
 using Microsoft.Data.SqlClient;
 using swuApi.Models;
-using swuApi.Repositories;
-using swuApi.Enums;
 using System.Data.Common;
 
 namespace swuApi.Repositories

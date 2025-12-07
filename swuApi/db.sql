@@ -78,7 +78,7 @@ CREATE TABLE Cards (
     Subtitle NVARCHAR(100) NULL,
     Model NVARCHAR(50) NOT NULL DEFAULT 'Standard',
     Aspect NVARCHAR(50) NULL,
-    Rarity NVARCHAR(50) NOT NULL DEFAULT 'Common', 
+    Rarity NVARCHAR(50) NOT NULL DEFAULT 'Common',
     CardNumber INT NOT NULL,
     CollectionId INT NOT NULL,
     Price DECIMAL(10, 2) NOT NULL CHECK (Price >= 0),
@@ -111,13 +111,13 @@ CREATE TABLE UserCards (
     FOREIGN KEY (CardId) REFERENCES Cards(Id)
 );
 
-INSERT INTO UserCard (UserId, CardId, Copies, DateAdded)
+INSERT INTO UserCards (UserId, CardId, Copies, DateAdded)
 VALUES (1, 1, 2, GETDATE());
 
-INSERT INTO UserCard (UserId, CardId, Copies, DateAdded)
+INSERT INTO UserCards (UserId, CardId, Copies, DateAdded)
 VALUES (2, 2, 1, GETDATE());
 
-INSERT INTO UserCard (UserId, CardId, Copies, DateAdded)
+INSERT INTO UserCards (UserId, CardId, Copies, DateAdded)
 VALUES (1, 3, 5, GETDATE());
 
-SELECT * FROM UserCard;
+SELECT * FROM UserCards;
