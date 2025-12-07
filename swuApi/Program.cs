@@ -1,6 +1,6 @@
-using swuApi.Repositories;
 using swuApi.Models;
-using swuApi.Services; // Necesario para registrar los Servicios
+using swuApi.Repositories;
+using swuApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,10 +28,18 @@ builder.Services.AddScoped<IRepository<Collection>, CollectionRepository>(provid
 builder.Services.AddScoped<IRepository<Pack>, PackRepository>(provider =>
     new PackRepository(connectionString!));
 
+builder.Services.AddScoped<IRepository<User>, UserRepository>(provider =>
+    new UserRepository(connectionString!));
+
+builder.Services.AddScoped<IUserCardRepository, UserCardRepository>(provider =>
+    new UserCardRepository(connectionString!));
+
 // Dependencias Services
 builder.Services.AddScoped<IService<Card>, CardService>();
 builder.Services.AddScoped<IService<Collection>, CollectionService>();
 builder.Services.AddScoped<IService<Pack>, PackService>();
+builder.Services.AddScoped<IService<User>, UserService>();
+builder.Services.AddScoped<IUserCardService, UserCardService>();
 
 
 // Otros servicios del Framework
