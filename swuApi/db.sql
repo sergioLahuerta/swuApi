@@ -42,10 +42,9 @@ CREATE TABLE Cards (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     CardName NVARCHAR(100) NOT NULL,
     Subtitle NVARCHAR(100) NULL,
-    Model NVARCHAR(50) NOT NULL,
+    Model NVARCHAR(50) NOT NULL DEFAULT 'Standard',
     Aspect NVARCHAR(50) NULL,
     CardNumber INT NOT NULL,
-    Copies INT NOT NULL DEFAULT 0,
     CollectionId INT NOT NULL,
     Price DECIMAL(10, 2) NOT NULL CHECK (Price >= 0),
     DateAcquired DATETIME NOT NULL,
@@ -54,11 +53,11 @@ CREATE TABLE Cards (
     FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
 );
 
-INSERT INTO Cards (CardName, Subtitle, Model, Aspect, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo)
+INSERT INTO Cards (CardName, Subtitle, Model, Aspect, CardNumber, CollectionId, Price, DateAcquired, IsPromo)
 VALUES
-('Luke Skywalker', 'Jedi Knight', 'Unit', 'Vigilance', 5, 1, 1, 15.00, GETDATE(), 0),
-('Darth Vader', 'Dark Lord', 'Unit', 'Command', 1, 1, 1, 30.50, GETDATE(), 0),
-('Fighter Wing', NULL, 'Starship', 'Aggression', 150, 2, 2, 5.00, GETDATE(), 0),
-('Moff Gideon', 'Imperial Commander', 'Leader', 'Command', 10, 1, 2, 20.00, GETDATE(), 1);
+('Luke Skywalker', 'Jedi Knight', 'Unit', 'Vigilance', 5, 1, 15.00, GETDATE(), 0),
+('Darth Vader', 'Dark Lord', 'Unit', 'Command', 1, 1, 30.50, GETDATE(), 0),
+('Fighter Wing', NULL, 'Starship', 'Aggression', 150, 2, 5.00, GETDATE(), 0),
+('Moff Gideon', 'Imperial Commander', 'Leader', 'Command', 10, 2, 20.00, GETDATE(), 1);
 
 SELECT * FROM Cards;

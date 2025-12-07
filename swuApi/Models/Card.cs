@@ -13,7 +13,6 @@ namespace swuApi.Models
         public CardAspectType Aspect { get; set; }
         public CardRarityType Rarity { get; set; } = CardRarityType.Common;
         public int CardNumber { get; set; } 
-        public int Copies { get; set; }
         public decimal Price { get; set; }
         public DateTime DateAcquired { get; set; }
         public bool IsPromo { get; set; } = false;
