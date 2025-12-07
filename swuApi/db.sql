@@ -9,6 +9,7 @@ FROM sys.databases
 WHERE name = 'swuDB';
 
 /* Función Helper para eliminar tablas en orden si existen, respetando las FK */
+IF OBJECT_ID('swuDB.dbo.UserCards', 'U') IS NOT NULL DROP TABLE UserCards;
 IF OBJECT_ID('swuDB.dbo.Cards', 'U') IS NOT NULL DROP TABLE Cards;
 IF OBJECT_ID('swuDB.dbo.Packs', 'U') IS NOT NULL DROP TABLE Packs;
 IF OBJECT_ID('swuDB.dbo.Users', 'U') IS NOT NULL DROP TABLE Users;
@@ -94,3 +95,29 @@ VALUES
 ('Moff Gideon', 'Imperial Commander', 'Leader', 'Command', 10, 2, 20.00, GETDATE(), 1);
 
 SELECT * FROM Cards;
+
+/*------------- Inventario Personal -------------*/
+CREATE TABLE UserCards (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    UserId INT NOT NULL,
+    CardId INT NOT NULL,
+    Copies INT NOT NULL CHECK (Copies >= 1) DEFAULT 1,
+    DateAdded DATETIME NOT NULL, 
+    IsFavorite BIT NOT NULL DEFAULT 0,
+    
+    CONSTRAINT UQ_UserCard UNIQUE (UserId, CardId),
+    
+    FOREIGN KEY (UserId) REFERENCES Users(Id),
+    FOREIGN KEY (CardId) REFERENCES Cards(Id)
+);
+
+INSERT INTO UserCard (UserId, CardId, Copies, DateAdded)
+VALUES (1, 1, 2, GETDATE());
+
+INSERT INTO UserCard (UserId, CardId, Copies, DateAdded)
+VALUES (2, 2, 1, GETDATE());
+
+INSERT INTO UserCard (UserId, CardId, Copies, DateAdded)
+VALUES (1, 3, 5, GETDATE());
+
+SELECT * FROM UserCard;
