@@ -87,12 +87,12 @@ CREATE TABLE Cards (
     FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
 );
 
-INSERT INTO Cards (CardName, Subtitle, Model, Aspect, CardNumber, CollectionId, Price, DateAcquired, IsPromo)
+INSERT INTO Cards (CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo)
 VALUES
-('Luke Skywalker', 'Jedi Knight', 'Unit', 'Vigilance', 5, 1, 15.00, GETDATE(), 0),
-('Darth Vader', 'Dark Lord', 'Unit', 'Command', 1, 1, 30.50, GETDATE(), 0),
-('Fighter Wing', NULL, 'Starship', 'Aggression', 150, 2, 5.00, GETDATE(), 0),
-('Moff Gideon', 'Imperial Commander', 'Leader', 'Command', 10, 2, 20.00, GETDATE(), 1);
+('Luke Skywalker', 'Jedi Knight', 'Unit', 'Vigilance', "Uncommon", 5, 1, 15.00, GETDATE(), 0),
+('Darth Vader', 'Dark Lord', 'Unit', 'Command', "Common", 1, 1, 30.50, GETDATE(), 0),
+('Fighter Wing', NULL, 'Starship', 'Aggression', "Rare", 150, 2, 5.00, GETDATE(), 0),
+('Moff Gideon', 'Imperial Commander', 'Leader', 'Command', "Lengendary", 10, 2, 20.00, GETDATE(), 1);
 
 SELECT * FROM Cards;
 
