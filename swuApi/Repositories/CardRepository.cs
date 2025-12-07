@@ -207,8 +207,7 @@ namespace swuApi.Repositories
             int newId = await GetMaxIdAsync() + 1;
             card.Id = newId;
 
-            string query = @"INSERT INTO Cards (Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo) 
-                             VALUES (@Id, @CardName, @Subtitle, @Model, @Aspect, @Rarity, @CardNumber, @CollectionId, @Price, @DateAcquired, @IsPromo)";
+            string query = @"INSERT INTO Cards (Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo) VALUES (@Id, @CardName, @Subtitle, @Model, @Aspect, @Rarity, @CardNumber, @CollectionId, @Price, @DateAcquired, @IsPromo)";
             
             using var command = new SqlCommand(query, connection);
 
