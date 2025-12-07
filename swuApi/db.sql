@@ -49,7 +49,7 @@ CREATE TABLE Packs (
 INSERT INTO Packs (PackName, NumberOfCards, ShowcaseRarityOdds, Price, ReleaseDate, CollectionId)
 VALUES
 ('Booster Pack SoR', 16, 288, 4.99, GETDATE(), 1),
-('Booster Pack SoG', 16, 288, 4.99, GETDATE(), 2),
+('Booster Pack SoG', 16, 288, 4.99, GETDATE(), 2);
 
 SELECT * FROM Packs;
 
