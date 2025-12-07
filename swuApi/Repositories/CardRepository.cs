@@ -61,7 +61,6 @@ namespace swuApi.Repositories
         {
             var cards = new List<Card>();
 
-            // 💡 Consulta actualizada para incluir Rarity (índice 5)
             var baseQuery = @"
                 SELECT Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo FROM Cards";
             
