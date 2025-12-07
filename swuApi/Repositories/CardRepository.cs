@@ -179,7 +179,7 @@ namespace swuApi.Repositories
         public async Task<List<Card>> GetAllCardsInCollectionAsync(int collectionId)
         {
             // Lógica para obtener las cartas filtrando por CollectionId
-            string query = "SELECT Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo FROM Cards WHERE CollectionId = @CollectionId";
+            string query = "SELECT Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo FROM Cards WHERE CollectionId = @CollectionId";
 
             var cards = new List<Card>();
             using (var connection = new SqlConnection(_connectionString))
