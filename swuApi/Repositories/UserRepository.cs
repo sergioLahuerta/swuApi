@@ -4,11 +4,11 @@ using System.Data.Common;
 
 namespace swuApi.Repositories
 {
-    public class UserRepository : IRepository<User>
+    public class UserRepository : IUserRepository
     {
         private readonly string _connectionString;
 
-        public UserRepository (string connectionString)
+        public UserRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -22,23 +22,23 @@ namespace swuApi.Repositories
         {
             return new User
             {
-              Id = reader.GetInt32(0),
-              Username = reader.GetString(1),
-              Email = reader.GetString(2),
-              PasswordHash = reader.GetString(3),
-              RegistrationDate = reader.GetDateTime(4),
-              IsActive = reader.GetBoolean(5),
-              TotalCollectionValue = reader.GetDecimal(6),
+                Id = reader.GetInt32(0),
+                Username = reader.GetString(1),
+                Email = reader.GetString(2),
+                PasswordHash = reader.GetString(3),
+                RegistrationDate = reader.GetDateTime(4),
+                IsActive = reader.GetBoolean(5),
+                TotalCollectionValue = reader.GetDecimal(6),
             };
         }
 
-        private const string UserBaseQuery = 
+        private const string UserBaseQuery =
             "SELECT Id, Username, Email, PasswordHash, RegistrationDate, IsActive, TotalCollectionValue FROM Users";
 
         public async Task<List<User>> GetAllAsync()
         {
             var users = new List<User>();
-            
+
             using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand(UserBaseQuery, connection))
             {
@@ -74,17 +74,17 @@ namespace swuApi.Repositories
             }
             return user;
         }
-        
+
         // Usuarios filtrados y ordenados
         public async Task<List<User>> GetFilteredAsync(string? filterField, string? filterValue, string? sortField, string? sortDirection)
         {
-             var users = new List<User>();
-            
+            var users = new List<User>();
+
             var baseQuery = UserBaseQuery;
             var whereClause = "";
             var orderByClause = "";
             var parameters = new Dictionary<string, object>();
-            
+
             // Lógica de filtrado
             if (!string.IsNullOrWhiteSpace(filterField) && !string.IsNullOrWhiteSpace(filterValue) && ValidFields.Contains(filterField))
             {
@@ -136,7 +136,31 @@ namespace swuApi.Repositories
             var result = await command.ExecuteScalarAsync();
             return (int)result;
         }
-        
+
+        public async Task<User?> GetByUsernameOrEmailAsync(string username, string email)
+        {
+            // Lógica basada en el .sql para buscar por nombre de usuario O email
+            string query = @"
+            SELECT Id, Username, Email, PasswordHash, RegistrationDate, IsActive, TotalCollectionValue FROM Users 
+            WHERE Username = @Username OR Email = @Email";
+
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Username", username);
+                command.Parameters.AddWithValue("@Email", email);
+                await connection.OpenAsync();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        return MapToUser(reader);
+                    }
+                }
+            }
+            return null;
+        }
+
         public async Task AddAsync(User user)
         {
             using var connection = new SqlConnection(_connectionString);
