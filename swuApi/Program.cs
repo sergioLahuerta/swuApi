@@ -28,7 +28,10 @@ builder.Services.AddScoped<IRepository<Collection>, CollectionRepository>(provid
 builder.Services.AddScoped<IRepository<Pack>, PackRepository>(provider =>
     new PackRepository(connectionString!));
 
-builder.Services.AddScoped<IRepository<User>, UserRepository>(provider =>
+builder.Services.AddScoped<IPackOpeningRepository, CardRepository>(provider =>
+    new CardRepository(connectionString));
+
+builder.Services.AddScoped<IUserRepository, UserRepository>(provider =>
     new UserRepository(connectionString!));
 
 builder.Services.AddScoped<IUserCardRepository, UserCardRepository>(provider =>
@@ -38,6 +41,7 @@ builder.Services.AddScoped<IUserCardRepository, UserCardRepository>(provider =>
 builder.Services.AddScoped<IService<Card>, CardService>();
 builder.Services.AddScoped<IService<Collection>, CollectionService>();
 builder.Services.AddScoped<IService<Pack>, PackService>();
+builder.Services.AddScoped<IPackOpeningService, PackOpeningService>();
 builder.Services.AddScoped<IService<User>, UserService>();
 builder.Services.AddScoped<IUserCardService, UserCardService>();
 
