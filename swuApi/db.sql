@@ -1,23 +1,20 @@
-
 -- Creo la Base de Datos (solo si no existe)
 IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'swuDB')
     CREATE DATABASE swuDB;
 
 USE swuDB;
 
-
 SELECT name, database_id, create_date 
 FROM sys.databases 
 WHERE name = 'swuDB';
 
-
 /* Función Helper para eliminar tablas en orden si existen, respetando las FK */
 IF OBJECT_ID('swuDB.dbo.Cards', 'U') IS NOT NULL DROP TABLE Cards;
+IF OBJECT_ID('swuDB.dbo.Packs', 'U') IS NOT NULL DROP TABLE Packs;
+IF OBJECT_ID('swuDB.dbo.Users', 'U') IS NOT NULL DROP TABLE Users;
 IF OBJECT_ID('swuDB.dbo.Collections', 'U') IS NOT NULL DROP TABLE Collections;
 
-
 /*------------- Colecciones -------------*/
-
 CREATE TABLE Collections (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     CollectionName NVARCHAR(100) NOT NULL,
@@ -35,21 +32,57 @@ VALUES
 
 SELECT * FROM Collections;
 
+/*------------- Usuarios -------------*/
+CREATE TABLE Users (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Username NVARCHAR(50) NOT NULL UNIQUE, 
+    Email NVARCHAR(100) NOT NULL UNIQUE,  
+    PasswordHash NVARCHAR(256) NOT NULL, 
+    RegistrationDate DATETIME NOT NULL,
+    IsActive BIT NOT NULL DEFAULT 1,
+    TotalCollectionValue DECIMAL(10, 2) NOT NULL CHECK (TotalCollectionValue >= 0) DEFAULT 0
+);
+
+INSERT INTO Users (Username, Email, PasswordHash, RegistrationDate, IsActive, TotalCollectionValue)
+VALUES
+('HanShotFirst', 'han@falcon.com', 'hashed_pwd_123', GETDATE(), 1, 550.75),
+('LukeJedi', 'luke@jedi.net', 'hashed_pwd_456', GETDATE(), 1, 1200.00);
+
+SELECT * FROM Users;
+
+/*------------- Sobres -------------*/
+CREATE TABLE Packs (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    PackName NVARCHAR(100) NOT NULL,
+    NumberOfCards INT NOT NULL CHECK (NumberOfCards = 16) DEFAULT 16,
+    ShowcaseRarityOdds INT NOT NULL CHECK (ShowcaseRarityOdds >= 1),
+    GuaranteesRare BIT NOT NULL DEFAULT 1,
+    Price DECIMAL(10, 2) NOT NULL CHECK (Price >= 0),
+    ReleaseDate DATETIME NOT NULL,
+    CollectionId INT NOT NULL,
+    FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
+);
+
+INSERT INTO Packs (PackName, NumberOfCards, ShowcaseRarityOdds, Price, ReleaseDate, CollectionId)
+VALUES
+('Booster Pack SoR', 16, 288, 4.99, GETDATE(), 1),
+('Booster Pack SoG', 16, 288, 4.99, GETDATE(), 2);
+
+SELECT * FROM Packs;
 
 /*------------- Cartas -------------*/
-
 CREATE TABLE Cards (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     CardName NVARCHAR(100) NOT NULL,
     Subtitle NVARCHAR(100) NULL,
     Model NVARCHAR(50) NOT NULL DEFAULT 'Standard',
     Aspect NVARCHAR(50) NULL,
+    Rarity NVARCHAR(50) NOT NULL DEFAULT 'Common', 
     CardNumber INT NOT NULL,
     CollectionId INT NOT NULL,
     Price DECIMAL(10, 2) NOT NULL CHECK (Price >= 0),
     DateAcquired DATETIME NOT NULL,
     IsPromo BIT NOT NULL DEFAULT 0,
-    
     FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
 );
 

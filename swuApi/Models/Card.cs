@@ -6,7 +6,7 @@ namespace swuApi.Models
 {
     public class Card
     {
-        public int Id { get; set; } 
+        public int Id { get; set; }
         public string CardName { get; set; } = string.Empty;
         public string Subtitle { get; set; }
         public CardModelType Model { get; set; }
