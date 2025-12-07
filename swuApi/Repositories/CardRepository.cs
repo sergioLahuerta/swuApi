@@ -16,7 +16,7 @@ namespace swuApi.Repositories
 
         private static readonly HashSet<string> ValidFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            "CardName", "Model", "Aspect", "Rarity", "CardNumber", "Copies", "CollectionId", "Price", "DateAcquired", "IsPromo"
+            "CardName", "Model", "Aspect", "Rarity", "CardNumber", "CollectionId", "Price", "DateAcquired", "IsPromo"
         };
 
         // Función de mapeo unificada para manejar la conversión de string a enum
@@ -36,11 +36,10 @@ namespace swuApi.Repositories
                 Aspect = (CardAspectType)Enum.Parse(typeof(CardAspectType), aspectString),
                 Rarity = (CardRarityType)Enum.Parse(typeof(CardRarityType), reader.GetString(5)),
                 CardNumber = reader.GetInt32(6),
-                Copies = reader.GetInt32(7),
-                CollectionId = reader.GetInt32(8),
-                Price = reader.GetDecimal(9),
-                DateAcquired = reader.GetDateTime(10),
-                IsPromo = reader.GetBoolean(11)
+                CollectionId = reader.GetInt32(7),
+                Price = reader.GetDecimal(8),
+                DateAcquired = reader.GetDateTime(9),
+                IsPromo = reader.GetBoolean(10)
             };
         }
 
@@ -64,8 +63,8 @@ namespace swuApi.Repositories
 
             // 💡 Consulta actualizada para incluir Rarity (índice 5)
             var baseQuery = @"
-                SELECT Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo FROM Cards";
-
+                SELECT Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo FROM Cards";
+            
             var whereClause = "";
             var orderByClause = "";
             var parameters = new Dictionary<string, object>();
@@ -138,8 +137,8 @@ namespace swuApi.Repositories
                 await connection.OpenAsync();
 
                 string query = @"
-                    SELECT Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo FROM Cards";
-
+                    SELECT Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo FROM Cards";
+                
                 using (var command = new SqlCommand(query, connection))
                 using (var reader = await command.ExecuteReaderAsync())
                 {
@@ -161,8 +160,8 @@ namespace swuApi.Repositories
                 await connection.OpenAsync();
 
                 string query = @"
-                    SELECT Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo FROM Cards WHERE Id = @Id";
-
+                    SELECT Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo FROM Cards WHERE Id = @Id";
+                
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
@@ -209,9 +208,9 @@ namespace swuApi.Repositories
             int newId = await GetMaxIdAsync() + 1;
             card.Id = newId;
 
-            string query = @"INSERT INTO Cards (Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, Copies, CollectionId, Price, DateAcquired, IsPromo) 
-                             VALUES (@Id, @CardName, @Subtitle, @Model, @Aspect, @Rarity, @CardNumber, @Copies, @CollectionId, @Price, @DateAcquired, @IsPromo)";
-
+            string query = @"INSERT INTO Cards (Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo) 
+                             VALUES (@Id, @CardName, @Subtitle, @Model, @Aspect, @Rarity, @CardNumber, @CollectionId, @Price, @DateAcquired, @IsPromo)";
+            
             using var command = new SqlCommand(query, connection);
 
             // Uso .ToString() para convertir el enum a la cadena NVARCHAR del .sql
@@ -222,7 +221,6 @@ namespace swuApi.Repositories
             command.Parameters.AddWithValue("@Aspect", card.Aspect.ToString());
             command.Parameters.AddWithValue("@Rarity", card.Rarity.ToString());
             command.Parameters.AddWithValue("@CardNumber", card.CardNumber);
-            command.Parameters.AddWithValue("@Copies", card.Copies);
             command.Parameters.AddWithValue("@CollectionId", card.CollectionId);
             command.Parameters.AddWithValue("@Price", card.Price);
             command.Parameters.AddWithValue("@DateAcquired", card.DateAcquired);
@@ -237,9 +235,9 @@ namespace swuApi.Repositories
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-
-                string query = @"UPDATE Cards SET CardName=@CardName, Subtitle=@Subtitle, Model=@Model, Aspect=@Aspect, Rarity=@Rarity, CardNumber=@CardNumber, Copies=@Copies, CollectionId=@CollectionId, Price=@Price, DateAcquired=@DateAcquired, IsPromo=@IsPromo WHERE Id=@Id";
-
+                
+                string query = @"UPDATE Cards SET CardName=@CardName, Subtitle=@Subtitle, Model=@Model, Aspect=@Aspect, Rarity=@Rarity, CardNumber=@CardNumber, CollectionId=@CollectionId, Price=@Price, DateAcquired=@DateAcquired, IsPromo=@IsPromo WHERE Id=@Id";
+                
                 using (var command = new SqlCommand(query, connection))
                 {
                     // Uso .ToString() para convertir el enum a la cadena NVARCHAR del .sql
@@ -250,7 +248,6 @@ namespace swuApi.Repositories
                     command.Parameters.AddWithValue("@Aspect", card.Aspect.ToString());
                     command.Parameters.AddWithValue("@Rarity", card.Rarity.ToString());
                     command.Parameters.AddWithValue("@CardNumber", card.CardNumber);
-                    command.Parameters.AddWithValue("@Copies", card.Copies);
                     command.Parameters.AddWithValue("@CollectionId", card.CollectionId);
                     command.Parameters.AddWithValue("@Price", card.Price);
                     command.Parameters.AddWithValue("@DateAcquired", card.DateAcquired);

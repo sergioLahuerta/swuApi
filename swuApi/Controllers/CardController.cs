@@ -66,7 +66,6 @@ namespace swuApi.Controllers
                 Aspect = cardDTO.Aspect,
                 Rarity = cardDTO.Rarity,
                 CardNumber = cardDTO.CardNumber,
-                Copies = cardDTO.Copies,
                 Price = cardDTO.Price,
                 DateAcquired = cardDTO.DateAcquired,
                 IsPromo = cardDTO.IsPromo,

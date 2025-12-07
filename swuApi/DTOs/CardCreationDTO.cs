@@ -12,7 +12,6 @@ namespace swuApi.DTOs
         public CardAspectType Aspect { get; set; }
         public CardRarityType Rarity { get; set; } = CardRarityType.Common;
         public int CardNumber { get; set; }
-        public int Copies { get; set; } = 0;
         public decimal Price { get; set; }
         public DateTime DateAcquired { get; set; } = default;
         
