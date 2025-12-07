@@ -4,8 +4,6 @@ using swuApi.Services; // Necesario para registrar los Servicios
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- 1. CONFIGURACIÓN DE SERVICIOS ---
-
 // Configuración de servicio CORS global
 builder.Services.AddCors(options =>
 {
@@ -21,15 +19,19 @@ builder.Services.AddCors(options =>
 var connectionString = builder.Configuration.GetConnectionString("SWUPersonalApi");
 
 // Dependencias Repositories
-builder.Services.AddScoped<IRepository<Card>, CardRepository>(provider =>
-    new CardRepository(connectionString!));
+builder.Services.AddScoped<IPackOpeningRepository, CardRepository>(provider =>
+    new CardRepository(connectionString));
 
 builder.Services.AddScoped<IRepository<Collection>, CollectionRepository>(provider =>
     new CollectionRepository(connectionString!));
 
+builder.Services.AddScoped<IRepository<Pack>, PackRepository>(provider =>
+    new PackRepository(connectionString!));
+
 // Dependencias Services
 builder.Services.AddScoped<IService<Card>, CardService>();
 builder.Services.AddScoped<IService<Collection>, CollectionService>();
+builder.Services.AddScoped<IService<Pack>, PackService>();
 
 
 // Otros servicios del Framework

@@ -2,11 +2,10 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 
-namespace swuApi.Models
+namespace swuApi.DTOs
 {
-    public class Pack
+    public class PackCreationDTO
     {
-        public int Id { get; set; } 
         public string PackName { get; set; } = string.Empty;
         public int NumberOfCards { get; set; } = 16;
         public int ShowcaseRarityOdds { get; set; }
@@ -14,11 +13,5 @@ namespace swuApi.Models
         public decimal Price { get; set; } = 4.99M;
         public DateTime ReleaseDate { get; set; }
         public int CollectionId { get; set; }
-        public Collection? Collection { get; set; }
-
-        public Pack()
-        {
-            ReleaseDate = DateTime.UtcNow;
-        }
     }
 }
