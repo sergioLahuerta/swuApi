@@ -1,9 +1,10 @@
 -- Creo la Base de Datos (solo si no existe)
 IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'swuDB')
     CREATE DATABASE swuDB;
+GO
 
 USE swuDB;
-
+GO
 SELECT name, database_id, create_date 
 FROM sys.databases 
 WHERE name = 'swuDB';

@@ -19,9 +19,6 @@ builder.Services.AddCors(options =>
 var connectionString = builder.Configuration.GetConnectionString("SWUPersonalApi");
 
 // Dependencias Repositories
-builder.Services.AddScoped<IPackOpeningRepository, CardRepository>(provider =>
-    new CardRepository(connectionString));
-
 builder.Services.AddScoped<IRepository<Collection>, CollectionRepository>(provider =>
     new CollectionRepository(connectionString!));
 
