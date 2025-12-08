@@ -6,11 +6,9 @@ using swuApi.Services;
 namespace swuApi.Controllers
 {
     [ApiController]
-    // La ruta será /api/Collections
-    [Route("api/[controller]")] 
+    [Route("api/[controller]")]
     public class CollectionController : ControllerBase
     {
-        // Inyectamos el Servicio, que contendrá la lógica de negocio y usará el Repositorio.
         private readonly IService<Collection> _collectionService;
 
         public CollectionController(IService<Collection> collectionService)
@@ -18,112 +16,117 @@ namespace swuApi.Controllers
             _collectionService = collectionService;
         }
 
-        // GET: api/Collections
+        // ----------------------------------------
+        // GET ALL
+        // ----------------------------------------
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Collection>>> Get()
+        public async Task<ActionResult<IEnumerable<CollectionGetAllDTO>>> Get()
         {
             var collections = await _collectionService.GetAllAsync();
-            return Ok(collections);
+
+            var dtoList = collections.Select(c => new CollectionGetAllDTO
+            {
+                Id = c.Id,
+                CollectionName = c.CollectionName,
+                Color = c.Color,
+                NumCards = c.NumCards,
+                EstimatedValue = c.EstimatedValue,
+                CreationDate = c.CreationDate,
+                IsComplete = c.IsComplete
+            });
+
+            return Ok(dtoList);
         }
 
-        // GET: api/Collections/5 (uno específico)
+        // ----------------------------------------
+        // GET BY ID
+        // ----------------------------------------
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Collection>> Get(int id)
+        public async Task<ActionResult<CollectionGetAllDTO>> Get(int id)
         {
-            try
-            {
-                var collection = await _collectionService.GetByIdAsync(id);
-                if (collection == null)
-                    return NotFound();
+            var collection = await _collectionService.GetByIdAsync(id);
 
-                return Ok(collection);
-            }
-            // Capturar la excepción si el ID es inválido
-            catch (ArgumentException ex) 
+            if (collection == null)
+                return NotFound();
+
+            var dto = new CollectionGetAllDTO
             {
-                return BadRequest(ex.Message);
-            }
+                Id = collection.Id,
+                CollectionName = collection.CollectionName,
+                Color = collection.Color,
+                NumCards = collection.NumCards,
+                EstimatedValue = collection.EstimatedValue,
+                CreationDate = collection.CreationDate,
+                IsComplete = collection.IsComplete
+            };
+
+            return Ok(dto);
         }
 
-        // POST: api/Collections
+        // ----------------------------------------
+        // POST
+        // ----------------------------------------
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] CollectionCreationDTO collectionDTO)
+        public async Task<IActionResult> Post([FromBody] CollectionCreationDTO dto)
         {
-            // Mapeao del DTO al Modelo Collection
             var collection = new Collection
             {
-                CollectionName = collectionDTO.CollectionName,
-                Color = collectionDTO.Color,
-                NumCards = collectionDTO.NumCards,
-                EstimatedValue = collectionDTO.EstimatedValue,                
-                CreationDate = collectionDTO.CreationDate ?? default(DateTime), 
-                IsComplete = collectionDTO.IsComplete,
+                CollectionName = dto.CollectionName,
+                Color = dto.Color,
+                NumCards = dto.NumCards,
+                EstimatedValue = dto.EstimatedValue,
+                CreationDate = dto.CreationDate ?? DateTime.Now,
+                IsComplete = dto.IsComplete
             };
 
-            try
-            {
-                await _collectionService.AddAsync(collection);
+            await _collectionService.AddAsync(collection);
 
-                return CreatedAtAction(nameof(Get), new { id = collection.Id }, collection);
-            }
-            catch (ArgumentException ex) 
-            {
-                return BadRequest(ex.Message);
-            }
+            return CreatedAtAction(nameof(Get), new { id = collection.Id }, collection);
         }
 
-        // PUT: api/Collections/5
+        // ----------------------------------------
+        // PUT
+        // ----------------------------------------
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(int id, [FromBody] Collection collection)
+        public async Task<IActionResult> Put(int id, [FromBody] CollectionUpdateDTO dto)
         {
-            if (id != collection.Id)
-            {
-                return BadRequest("El ID de la ruta no coincide con el ID del cuerpo.");
-            }
-
-            try
-            {
-                await _collectionService.UpdateAsync(collection);
-                return NoContent();            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (KeyNotFoundException)
-            {
+            var existing = await _collectionService.GetByIdAsync(id);
+            if (existing == null)
                 return NotFound();
-            }
+
+            existing.CollectionName = dto.CollectionName;
+            existing.Color = dto.Color;
+            existing.NumCards = dto.NumCards;
+            existing.EstimatedValue = dto.EstimatedValue;
+            existing.CreationDate = dto.CreationDate ?? existing.CreationDate;
+            existing.IsComplete = dto.IsComplete;
+
+            await _collectionService.UpdateAsync(existing);
+
+            return NoContent();
         }
 
-        // ------------------------------------
-        // DELETE: api/Collections/5
+        // ----------------------------------------
+        // DELETE
+        // ----------------------------------------
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await _collectionService.DeleteAsync(id);
-                return NoContent(); // No content es éxito porque una petición DELETE no devuelve nada (en el cuerpo)
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (KeyNotFoundException)
-            {
+            var collection = await _collectionService.GetByIdAsync(id);
+            if (collection == null)
                 return NotFound();
-            }
+
+            await _collectionService.DeleteAsync(id);
+            return NoContent();
         }
     }
 }
