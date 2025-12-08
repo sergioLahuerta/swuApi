@@ -1,4 +1,5 @@
 // En Services/UserCardService.cs
+using swuApi.DTOs;
 using swuApi.Models;
 using swuApi.Repositories;
 
