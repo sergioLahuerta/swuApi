@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Star Wars Unlimited - Gestor de Cartas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./CSS/style.css">
+    <script src="./JS/apiCallsColecciones.js" defer></script>
+    <script src="./JS/apiCallsCartas.js" defer></script>
+    <script src="./JS/apiCallsSobres.js" defer></script>
+    <script src="./JS/buttonsOptions.js" defer></script>
+</head>
+
+<body class="bg-dark text-light">
+    <div class="container my-4">
+        <div class="body__shadeTopBar">
+            <h1 style="margin-top: 0; position: relative; top: 1rem;">Registro de cartas SWU</h1>
+        </div>
+        <!-- Abrir PAckssss -->
+         <div id="abrirPacksContainer" style="display: none; gap: 20px; align-items: center; justify-content: center; align-items: flex-start; margin-left: 100px; padding: 20px 0;">
+            <input type="number" id="packIdInput" class="form-control" placeholder="ID del pack" style="width: 300px;">
+            <button id="abrirPackBtn" class="colecciones__buttons --verTodasColecciones" style=" width: 300px;">Abrir Pack</button>
+            <button id="volverAtrasSobres" class="btn-volver" style="width: 300px;">Volver atrás</button>
+        </div>
+
+        <div id="resultadoPack" style="justify-content: center;"></div>
+
+        <div class="body__containerButtons--home">
+            <button id="sobres-buttonHome" class="body__button --sobres">Sobres</button>
+            <button id="colecciones-buttonHome" class="body__button --colecciones">Colecciones</button>
+            <button id="cartas-buttonHome" class="body__button --cartas">Cartas</button>
+        </div>
+        <div class="row">
+            <!-- COLECCIONES -->
+            <div id="colecciones" class="col-md-6">
+                <div style="display: flex; flex-direction: column;">
+                    <h2 style="margin-bottom: 1.5rem;">Colecciones</h2>
+                    <button id="volverAtrasColecciones" class="btn-volver">Volver atrás</button>
+                    <!-- Obtener todas las colecciones -->
+                    <button id="todasColeccionesButton" class="colecciones__buttons --verTodasColecciones"
+                        type="button">Ver todas</button>
+                    <button id="crearColeccionButton" class="colecciones__buttons --crearColeccion">Crear</button>
+                    <button id="actualizarColeccionButton"
+                        class="colecciones__buttons --actualizarColeccion">Actualizar</button>
+                    <button id="eliminarColeccionButton"
+                        class="colecciones__buttons --eliminarColeccion">Eliminar</button>
+                </div>
+                <!-- Crear Coleccion -->
+                <div id="crearColeccion" class="form-container">
+                    <form id="crearColeccionForm" style="height: fit-content; margin-top: 5rem;">
+                        <div class="mb-2">
+                            <input type="text" class="form-control" name="collectionName" placeholder="Nombre colección"
+                                required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" name="color" placeholder="Color hex(#)" required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" class="form-control" name="numCards" placeholder="Número de cartas"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-primary create">Crear Colección</button>
+                        <div id="coleccionMsgCrear" class="mt-2"></div>
+                    </form>
+                </div>
+
+                <!-- Actualizar Coleccion -->
+                <div id="actualizarColeccion" class="form-container">
+                    <form id="actualizarColeccionForm" style="height: fit-content; margin-top: 5rem;">
+                        <div class="mb-2">
+                            <input type="text" class="form-control" name="nombre" placeholder="Nombre colección"
+                                required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" name="color" placeholder="Color hex(#)" required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" class="form-control" name="numCartas" placeholder="Número de cartas"
+                                required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" class="form-control" name="nuevoId"
+                                placeholder="Nuevo Id de la colección" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary update">Actualizar Colección</button>
+                        <div id="coleccionMsgActualizar"></div>
+                    </form>
+                </div>
+                <!-- Borrar Coleccion -->
+                <div id="eliminarColeccion" class="form-container">
+                    <form id="borrarColeccionForm" style="height: fit-content; margin-top: 5rem;">
+                        <div class="mb-2">
+                            <input type="text" class="form-control" name="id" placeholder="Número de la colección (Id)"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-primary delete">Eliminar Colección</button>
+                        <div id="coleccionMsgBorrar" class="mt-2"></div>
+                    </form>
+                </div>
+                <!-- Resultados de colecciones -->
+                <div id="listaColecciones"
+                    style="display: flex; gap: 10px; height: fit-content;; margin-top: 5rem; margin-left: 3rem;"></div>
+                <div id="coleccionMsgAll" class="mt-2"></div>
+            </div>
+            <div id="cartasColeccion" style="margin-top: 30px;"></div>
+            <!-- COLECCIONES -->
+
+            <!-- CARTAS -->
+            <div id="cartas" class="col-md-6">
+                <h2 style="margin-bottom: 1.5rem;">Cartas</h2>
+                <div class="d-flex" style="display: flex; flex-direction: column;">
+                    <button id="volverAtrasCartas" class="btn-volver">Volver atrás</button>
+                    <!-- Obtener todas las colecciones -->
+                    <div class="buttonsCartasContainer">
+                        <button id="crearCartaButton" class="cartas__buttons --crearCarta" type="button">Crear</button>
+                        <button id="actualizarCartaButton" class="cartas__buttons --actualizarCarta"
+                            type="button">Actualizar</button>
+                        <button id="eliminarCartaButton" class="cartas__buttons --eliminarCarta"
+                            type="button">Eliminar</button>
+                    </div>
+                </div>
+                <!-- Crear Carta -->
+                <div id="crearCarta" class="form-container">
+                    <form id="crearCartaForm">
+                        <div class="mb-2">
+                            <input type="text" class="form-control" name="CardName" placeholder="Nombre carta" required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" name="Subtitle" placeholder="Subtitulo">
+                        </div>
+                        <div class="mb-2">
+                            <select class="form-control" name="Model" required>
+                                <option value="Standard">Standard</option>
+                                <option value="Foil">Foil</option>
+                                <option value="Hyperspace">Hyperspace</option>
+                                <option value="Hyperspace Foil">Hyperspace Foil</option>
+                                <option value="Showcase">Showcase</option>
+                            </select>
+                        </div>
+                        <div class="mb-2 selectsAspecto-container">
+                            <select type="text" class="form-control" name="aspecto" placeholder="Aspecto" required>
+                                <option value="Vigilancia">Vigilancia</option>
+                                <option value="Comando">Comando</option>
+                                <option value="Agresión">Agresión</option>
+                                <option value="Astucia">Astucia</option>
+                                <option value="Maldad">Maldad</option>
+                                <option value="Heroismo">Heroismo</option>
+                            </select>
+                            <select type="text" class="form-control aspectoSelect2" name="aspecto" placeholder="Aspecto">
+                                <option value="" selected hidden null>2º aspecto</option>
+                                <option value="Vigilancia">Vigilancia</option>
+                                <option value="Comando">Comando</option>
+                                <option value="Agresión">Agresión</option>
+                                <option value="Astucia">Astucia</option>
+                                <option value="Maldad">Maldad</option>
+                                <option value="Heroismo">Heroismo</option>
+                            </select>
+                            <button type="button" class="btnSvgAspectoSelectPlus" style="background-color: transparent; border: none; z-index: 1;">
+                                <svg class="svgAspectoSelect" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40" height="40" viewBox="0 0 50 50">
+                                    <path fill="white" d="M 25 2 C 12.309295 2 2 12.309295 2 25 C 2 37.690705 12.309295 48 25 48 C 37.690705 48 48 37.690705 48 25 C 48 12.309295 37.690705 2 25 2 z M 25 4 C 36.609824 4 46 13.390176 46 25 C 46 36.609824 36.609824 46 25 46 C 13.390176 46 4 36.609824 4 25 C 4 13.390176 13.390176 4 25 4 z M 24 13 L 24 24 L 13 24 L 13 26 L 24 26 L 24 37 L 26 37 L 26 26 L 37 26 L 37 24 L 26 24 L 26 13 L 24 13 z"></path>
+                                </svg>
+                            </button>
+                            <button type="button" class="btnSvgAspectoSelectMinus" style="background-color: transparent; border: none; z-index: 1;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40px" height="40px" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="12" r="10" stroke="#FFFFFF" stroke-width="1.5"></circle>
+                                    <path d="M15 12H9" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="mb-2">
+                            <select class="form-control" name="Rarity">
+                                <option value="Common">Común</option>
+                                <option value="Uncommon">Infrecuente</option>
+                                <option value="Rare">Rara</option>
+                                <option value="Legendary">Legendaria</option>
+                                <option value="Special">Especial</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" class="form-control" name="CardNumber" placeholder="Número carta"
+                                required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" class="form-control" name="CollectionId" placeholder="Colección ID"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-success create">Crear Carta</button>
+                    </form>
+                </div>
+                <div id="cartaMsgCrear" class="mt-2" style="height: 30px;"></div>
+
+                <!-- Actualizar Carta -->
+                <div id="actualizarCarta" class="form-container">
+                    <form id="actualizarCartaForm">
+                        <div class="mb-2">
+                            <input type="text" class="form-control" name="nombre" placeholder="Nombre carta" required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" name="subtitulo" placeholder="Subtitulo">
+                        </div>
+                        <div class="mb-2">
+                            <select type="text" class="form-control" name="modelo" placeholder="Modelo" required>
+                                <option value="Normal">Normal</option>
+                                <option value="Foil">Foil</option>
+                                <option value="Hyperspace">Hyperspace</option>
+                                <option value="Hyperspace Foil">Hyperspace Foil</option>
+                                <option value="Showcase">Showcase</option>
+                                <option value="Event Exclusive">Event Exclusive</option>
+                                <option value="Jugde">Jugde</option>
+                            </select>
+                        </div>
+                        <div class="mb-2 selectsAspecto-container">
+                            <select type="text" class="form-control" name="aspecto" placeholder="Aspecto" required>
+                                <option value="Vigilancia">Vigilancia</option>
+                                <option value="Comando">Comando</option>
+                                <option value="Agresión">Agresión</option>
+                                <option value="Astucia">Astucia</option>
+                                <option value="Maldad">Maldad</option>
+                                <option value="Heroismo">Heroismo</option>
+                            </select>
+                            <select type="text" class="form-control aspectoSelect2" name="aspecto" placeholder="Aspecto"
+                                required>
+                                <option value="" selected hidden null>2º aspecto</option>
+                                <option value="Vigilancia">Vigilancia</option>
+                                <option value="Comando">Comando</option>
+                                <option value="Agresión">Agresión</option>
+                                <option value="Astucia">Astucia</option>
+                                <option value="Maldad">Maldad</option>
+                                <option value="Heroismo">Heroismo</option>
+                            </select>
+                            <button type="button" class="btnSvgAspectoSelectPlus"
+                                style="background-color: transparent; border: none; z-index: 1;">
+                                <svg class="svgAspectoSelect" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                    width="40" height="40" viewBox="0 0 50 50">
+                                    <path fill="white"
+                                        d="M 25 2 C 12.309295 2 2 12.309295 2 25 C 2 37.690705 12.309295 48 25 48 C 37.690705 48 48 37.690705 48 25 C 48 12.309295 37.690705 2 25 2 z M 25 4 C 36.609824 4 46 13.390176 46 25 C 46 36.609824 36.609824 46 25 46 C 13.390176 46 4 36.609824 4 25 C 4 13.390176 13.390176 4 25 4 z M 24 13 L 24 24 L 13 24 L 13 26 L 24 26 L 24 37 L 26 37 L 26 26 L 37 26 L 37 24 L 26 24 L 26 13 L 24 13 z">
+                                    </path>
+                                </svg>
+                            </button>
+                            <button type="button" class="btnSvgAspectoSelectMinus"
+                                style="background-color: transparent; border: none; z-index: 1;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40px" height="40px" viewBox="0 0 24 24"
+                                    fill="none">
+                                    <circle cx="12" cy="12" r="10" stroke="#FFFFFF" stroke-width="1.5"></circle>
+                                    <path d="M15 12H9" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="mb-2">
+                            <select type="text" class="form-control" name="rareza" placeholder="Rareza">
+                                <option value="Común">Común</option>
+                                <option value="Infrecuente">Infrecuente</option>
+                                <option value="Rara">Rara</option>
+                                <option value="Legendaria">Legendaria</option>
+                                <option value="Especial">Especial</option>
+                                <option value="Numerada">Numerada</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" class="form-control" name="numeroCarta" placeholder="Número carta"
+                                required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" class="form-control" name="cantidad" placeholder="Cantidad" required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" class="form-control" name="coleccionId" placeholder="Colección ID"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-success update">Actualizar Carta</button>
+                    </form>
+                </div>
+                <div id="cartaMsgActualizar" class="mt-2" style="height: 30px;"></div>
+
+                <!-- Borrar Carta -->
+                <div id="eliminarCarta" class="form-container-eliminarCarta">
+                    <form id="eliminarCartaForm">
+                        <div class="mb-2">
+                            <input type="text" class="form-control" name="id" placeholder="Id de la carta (DB)"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-success delete">Eliminar Carta</button>
+                    </form>
+                </div>
+                <div id="cartaMsgBorrar" class="mt-2"></div>
+            </div>
+            <!-- CARTAS -->
+        </div>
+    </div>
+</body>
+
+</html>
