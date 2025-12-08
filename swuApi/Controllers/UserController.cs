@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using swuApi.Models;
-using swuApi.DTOs;
+using swuApi.UserDTOs;
 using swuApi.Services;
 
 namespace swuApi.Controllers
@@ -16,32 +16,59 @@ namespace swuApi.Controllers
             _userService = userService;
         }
 
-        // GET: api/User?filterField=Username&filterValue=Han
+        // ============================================================
+        // GET ALL USERS (Con filtros + DTO)
+        // ============================================================
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<User>>> Get(
+        public async Task<ActionResult<IEnumerable<UserGetAllDTO>>> Get(
             [FromQuery] string? filterField,
             [FromQuery] string? filterValue,
             [FromQuery] string? sortField,
             [FromQuery] string? sortDirection)
         {
             var users = await _userService.GetFilteredAsync(filterField, filterValue, sortField, sortDirection);
-            return Ok(users);
+
+            var result = users.Select(u => new UserGetAllDTO
+            {
+                Id = u.Id,
+                Username = u.Username,
+                Email = u.Email,
+                PasswordHash = u.PasswordHash,
+                RegistrationDate = u.RegistrationDate,
+                IsActive = u.IsActive,
+                TotalCollectionValue = u.TotalCollectionValue
+            });
+
+            return Ok(result);
         }
 
-        // GET: api/User/1
+        // ============================================================
+        // GET BY ID
+        // ============================================================
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<User>> Get(int id)
+        public async Task<ActionResult<UserGetAllDTO>> Get(int id)
         {
             try
             {
                 var user = await _userService.GetByIdAsync(id);
                 if (user == null)
                     return NotFound();
-                return Ok(user);
+
+                var dto = new UserGetAllDTO
+                {
+                    Id = user.Id,
+                    Username = user.Username,
+                    Email = user.Email,
+                    PasswordHash = user.PasswordHash,
+                    RegistrationDate = user.RegistrationDate,
+                    IsActive = user.IsActive,
+                    TotalCollectionValue = user.TotalCollectionValue
+                };
+
+                return Ok(dto);
             }
             catch (ArgumentException ex)
             {
@@ -49,26 +76,28 @@ namespace swuApi.Controllers
             }
         }
 
-        // POST: api/User
+        // ============================================================
+        // POST
+        // ============================================================
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] UserCreationDTO userDTO)
+        public async Task<IActionResult> Post([FromBody] UserCreationDTO dto)
         {
             var user = new User
             {
-                Username = userDTO.Username,
-                Email = userDTO.Email,
-                PasswordHash = userDTO.PasswordHash, 
-                RegistrationDate = userDTO.RegistrationDate == default ? DateTime.UtcNow : userDTO.RegistrationDate,
-                IsActive = userDTO.IsActive,
-                TotalCollectionValue = userDTO.TotalCollectionValue
+                Username = dto.Username,
+                Email = dto.Email,
+                PasswordHash = dto.PasswordHash,
+                RegistrationDate = dto.RegistrationDate,
+                IsActive = dto.IsActive,
+                TotalCollectionValue = dto.TotalCollectionValue
             };
 
             try
             {
                 await _userService.AddAsync(user);
-                // Retornar 201 Created
+
                 return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
             }
             catch (ArgumentException ex)
@@ -77,37 +106,42 @@ namespace swuApi.Controllers
             }
         }
 
-        // PUT: api/User/1
+        // ============================================================
+        // PUT
+        // ============================================================
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(int id, [FromBody] User user)
+        public async Task<IActionResult> Put(int id, [FromBody] UserUpdateDTO dto)
         {
-            if (id != user.Id)
-            {
-                return BadRequest("El ID de la ruta no coincide con el ID del cuerpo.");
-            }
+            var existing = await _userService.GetByIdAsync(id);
+            if (existing == null)
+                return NotFound();
+
+            existing.Username = dto.Username;
+            existing.Email = dto.Email;
+            existing.PasswordHash = dto.PasswordHash;
+            existing.RegistrationDate = dto.RegistrationDate;
+            existing.IsActive = dto.IsActive;
+            existing.TotalCollectionValue = dto.TotalCollectionValue;
 
             try
             {
-                await _userService.UpdateAsync(user);
-                return NoContent(); // Éxito
+                await _userService.UpdateAsync(existing);
+                return NoContent();
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
         }
 
-        // DELETE: api/User/1
+        // ============================================================
+        // DELETE
+        // ============================================================
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
@@ -116,13 +150,13 @@ namespace swuApi.Controllers
                 await _userService.DeleteAsync(id);
                 return NoContent();
             }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
             catch (KeyNotFoundException)
             {
                 return NotFound();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

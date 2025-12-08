@@ -1,8 +1,8 @@
 using System.ComponentModel;
 
-namespace swuApi.DTOs
+namespace swuApi.CollectionDTOs
 {
-    public class CollectionCreationDTO
+    public abstract class ICollectionDTO
     {
         public string CollectionName { get; set; } = string.Empty;
         public string Color { get; set; }

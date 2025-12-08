@@ -1,3 +1,4 @@
+using swuApi.DTOs;
 using swuApi.Models;
 
 namespace swuApi.Services
