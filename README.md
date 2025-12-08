@@ -11,5 +11,8 @@ docker images
 docker tag imagen-Id sergiolala/swuapi-sv:1.0.0
 docker push sergiolala/swuapi-sv:1.0.0
 
+# Para actualizar la imagen de la db
+docker build --no-cache -f Dockerfile.db -t sergiolala/swuapi-db:1.0.0 .
+
 # Para descargar la imagen
 docker pull sergiolala/swuapi-sv:1.0.0
