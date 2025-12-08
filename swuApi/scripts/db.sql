@@ -91,9 +91,13 @@ CREATE TABLE Cards (
 INSERT INTO Cards (CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo)
 VALUES
 ('Luke Skywalker', 'Jedi Knight', 'Foil', 'Vigilance', 'Uncommon', 5, 1, 15.00, GETDATE(), 0),
+('Director Krennic', 'Aspira A La Autoridad', 'Standard', 'Vigilance', 'Rare', 1, 1, 0.00, GETDATE(), 0),
 ('Darth Vader', 'Dark Lord', 'Standard', 'Command', 'Common', 1, 1, 30.50, GETDATE(), 0),
 ('Fighter Wing', NULL, 'Showcase', 'Aggression', 'Rare', 150, 2, 5.00, GETDATE(), 0),
-('Moff Gideon', 'Imperial Commander', 'Hyperspace', 'Command', 'Legendary', 10, 2, 20.00, GETDATE(), 1);
+('Rayo de Fuerza', NULL, 'Standard', 'Villany', 'Legendary', 138, 1, 0.00, GETDATE(), 0),
+('Moff Gideon', 'Imperial Commander', 'Hyperspace', 'Command', 'Legendary', 10, 2, 20.00, GETDATE(), 1),
+('Boba Fett', 'Piensa Cobrar La Recompensa', 'Showcase', 'Cunning', 'Common', 265, 1, 0.00, GETDATE(), 0),
+('Leia Organa', 'General De La Alianza', 'Standard', 'Command, Heroism', 'Common', 9, 1, 1.00, GETDATE(), 0);
 
 SELECT * FROM Cards;
 
