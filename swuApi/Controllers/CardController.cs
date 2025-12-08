@@ -89,16 +89,28 @@ namespace swuApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(int id, [FromBody] Card card)
+        public async Task<IActionResult> Put(int id, [FromBody] CardUpdateDTO cardUpdateDTO) 
         {
-            if (id != card.Id)
+            // 1. Mapeo del DTO al modelo de dominio (Card)
+            var cardToUpdate = new Card 
             {
-                return BadRequest("El ID de la ruta no coincide con el ID del cuerpo.");
-            }
+                Id = id,
+                CardName = cardUpdateDTO.CardName,
+                Subtitle = cardUpdateDTO.Subtitle,
+                Model = cardUpdateDTO.Model,
+                Aspect = cardUpdateDTO.Aspect,
+                Rarity = cardUpdateDTO.Rarity,
+                CardNumber = cardUpdateDTO.CardNumber,
+                Price = cardUpdateDTO.Price,
+                DateAcquired = cardUpdateDTO.DateAcquired,
+                IsPromo = cardUpdateDTO.IsPromo,
+                CollectionId = cardUpdateDTO.CollectionId
+            };
 
+            // 2. Ejecutar la lógica de servicio
             try
             {
-                await _cardService.UpdateAsync(card);
+                await _cardService.UpdateAsync(cardToUpdate);
                 return NoContent();
             }
             catch (ArgumentException ex)

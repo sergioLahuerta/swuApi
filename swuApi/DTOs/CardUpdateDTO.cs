@@ -12,10 +12,10 @@ namespace swuApi.DTOs
         public CardModelType Model { get; set; }
         public CardAspectType Aspect { get; set; }
         public CardRarityType Rarity { get; set; }
-        public int CardNumber { get; set; } 
+        public int CardNumber { get; set; }
         public decimal Price { get; set; }
-        public DateTime DateAcquired { get; set; } 
+        public DateTime DateAcquired { get; set; }
         public bool IsPromo { get; set; }
-        public int CollectionId { get; set; } 
+        public int CollectionId { get; set; }
     }
 }
