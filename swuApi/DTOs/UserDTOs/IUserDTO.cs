@@ -1,6 +1,6 @@
-namespace swuApi.DTOs
+namespace swuApi.UserDTOs
 {
-    public class UserCreationDTO
+    public abstract class IUserDTO
     {
         public string Username { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
