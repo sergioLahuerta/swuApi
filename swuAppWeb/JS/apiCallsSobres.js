@@ -5,6 +5,16 @@ function mostrarCartasAbiertas(cartas, collectionData) {
         contenedor.innerHTML = "<p>No se generaron cartas.</p>";
         return;
     }
+
+    const ordenRareza = {
+        "Common": 1,
+        "Uncommon": 2,
+        "Rare": 3,
+        "Legendary": 4,
+        "Showcase": 5
+    };
+
+    cartas.sort((a, b) => ordenRareza[a.rarity] - ordenRareza[b.rarity]);
     
     const totalCollectionCards = collectionData.numCards || '?';
 
