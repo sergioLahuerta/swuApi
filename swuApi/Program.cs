@@ -19,9 +19,6 @@ builder.Services.AddCors(options =>
 var connectionString = builder.Configuration.GetConnectionString("SWUPersonalApi");
 
 // Dependencias Repositories
-builder.Services.AddScoped<IPackOpeningRepository, CardRepository>(provider =>
-    new CardRepository(connectionString));
-
 builder.Services.AddScoped<IRepository<Collection>, CollectionRepository>(provider =>
     new CollectionRepository(connectionString!));
 
@@ -43,7 +40,7 @@ builder.Services.AddScoped<IService<Collection>, CollectionService>();
 builder.Services.AddScoped<IService<Pack>, PackService>();
 builder.Services.AddScoped<IPackOpeningService, PackOpeningService>();
 builder.Services.AddScoped<IService<User>, UserService>();
-builder.Services.AddScoped<IUserCardService, UserCardService>();
+builder.Services.AddScoped<IService<UserCard>, UserCardService>();
 
 
 // Otros servicios del Framework
