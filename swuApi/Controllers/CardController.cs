@@ -17,7 +17,6 @@ namespace swuApi.Controllers
         }
 
         // GET: api/Card?filterField=Aspect&filterValue=Vigilance&sortField=Price&sortDirection=desc
-        // GET: api/Card?filterField=Aspect&filterValue=Vigilance&sortField=Price&sortDirection=desc
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Card>>> Get(

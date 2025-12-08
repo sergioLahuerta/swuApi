@@ -44,37 +44,41 @@ namespace swuApi.Repositories
         // GetFilteredAsync (Se mantiene igual)
         public async Task<List<Card>> GetFilteredAsync(string? filterField, string? filterValue, string? sortField, string? sortDirection)
         {
-            // ... (L├│gica de filtrado y ordenaci├│n) ...
             var cards = new List<Card>();
 
             var baseQuery = @"
-                SELECT Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo FROM Cards";
+                SELECT 
+                    c.Id, c.CardName, c.Subtitle, c.Model, c.Aspect, c.Rarity, c.CardNumber, c.CollectionId, 
+                    c.Price, c.DateAcquired, c.IsPromo,
+                    col.Id AS ColId, col.CollectionName, col.Color, col.NumCards, col.EstimatedValue, col.CreationDate, col.IsComplete
+                FROM Cards c
+                LEFT JOIN Collections col ON c.CollectionId = col.Id";
 
             var whereClause = "";
             var orderByClause = "";
             var parameters = new Dictionary<string, object>();
 
-            // Cl├íusula where para filtraje
+            // Filtro dinámico
             if (!string.IsNullOrWhiteSpace(filterField) && !string.IsNullOrWhiteSpace(filterValue))
             {
                 if (ValidFields.Contains(filterField))
                 {
-                    whereClause = $" WHERE {filterField} LIKE @FilterValue";
+                    whereClause = $" WHERE c.{filterField} LIKE @FilterValue";
                     parameters.Add("@FilterValue", $"%{filterValue}%");
                 }
             }
 
-            // Tambi├®n construir la cl├íusula ORDER BY
+            // Orden dinámico
             if (!string.IsNullOrWhiteSpace(sortField))
             {
                 if (ValidFields.Contains(sortField))
                 {
                     var direction = "ASC";
-                    if (sortDirection != null && sortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase))
+                    if (!string.IsNullOrWhiteSpace(sortDirection) && sortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase))
                     {
                         direction = "DESC";
                     }
-                    orderByClause = $" ORDER BY {sortField} {direction}";
+                    orderByClause = $" ORDER BY c.{sortField} {direction}";
                 }
             }
 
@@ -94,15 +98,42 @@ namespace swuApi.Repositories
                     {
                         while (await reader.ReadAsync())
                         {
-                            cards.Add(MapToCard(reader));
+                            // Mapeo de Card con Collection
+                            var card = new Card
+                            {
+                                Id = reader.GetInt32(0),
+                                CardName = reader.GetString(1),
+                                Subtitle = reader.IsDBNull(2) ? null : reader.GetString(2),
+                                Model = (CardModelType)Enum.Parse(typeof(CardModelType), reader.GetString(3)),
+                                Aspect = (CardAspectType)Enum.Parse(typeof(CardAspectType), reader.GetString(4)),
+                                Rarity = (CardRarityType)Enum.Parse(typeof(CardRarityType), reader.GetString(5)),
+                                CardNumber = reader.GetInt32(6),
+                                CollectionId = reader.GetInt32(7),
+                                Price = reader.GetDecimal(8),
+                                DateAcquired = reader.GetDateTime(9),
+                                IsPromo = reader.GetBoolean(10),
+                                Collection = reader.IsDBNull(11) ? null : new Collection
+                                {
+                                    Id = reader.GetInt32(11),
+                                    CollectionName = reader.GetString(12),
+                                    Color = reader.GetString(13),
+                                    NumCards = reader.GetInt32(14),
+                                    EstimatedValue = reader.GetDecimal(15),
+                                    CreationDate = reader.GetDateTime(16),
+                                    IsComplete = reader.GetBoolean(17)
+                                }
+                            };
+
+                            cards.Add(card);
                         }
                     }
                 }
             }
+
             return cards;
         }
 
-        // GetAllAsync (Se mantiene igual)
+        // GetAllAsync
         public async Task<List<Card>> GetAllAsync()
         {
             var cards = new List<Card>();
