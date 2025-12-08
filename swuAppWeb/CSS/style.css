@@ -69,6 +69,11 @@ h3 {
     border: 2px solid #ffffff;
 }
 
+.--sobres {
+    background-color: #561373;
+    border: 2px solid #ffffff;
+}
+
 .colecciones__buttons, .cartas__buttons {
     margin: 0.5rem 0;
     border-radius: 1rem;
@@ -212,6 +217,33 @@ h3 {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 0 50px;
+}
+
+/* Cartas Sobres */
+.cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 1rem;
+    padding: 10px;
+}
+
+.btn-volver {
+    background-color: #444;
+    color: #fff;
+    border: 2px solid #888;
+    border-radius: 8px;
+    padding: 0.5rem 1.2rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-volver:hover {
+    background-color: #555;
+    border-color: #fff;
+    color: #ffd700;
+    transform: scale(1.05);
 }
 
 .getAll-delete {

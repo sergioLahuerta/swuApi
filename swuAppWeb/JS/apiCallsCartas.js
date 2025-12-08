@@ -36,7 +36,7 @@ document.getElementById('crearCartaForm').onsubmit = async function(e) {
     const data = Object.fromEntries(new FormData(this));
     const msgElemento = document.getElementById('cartaMsgCrear');
 
-    if (!data.CardName || !data.Id) {
+    if (!data.CardName || !data.CollectionId) {
         msgElemento.innerText = 'Nombre y colección son obligatorios';
         msgElemento.style.backgroundColor = '#b33939';
         msgElemento.style.borderColor = '#b33939';
@@ -46,7 +46,7 @@ document.getElementById('crearCartaForm').onsubmit = async function(e) {
 
     data.CardNumber = parseInt(data.CardNumber, 10) || 0;
     data.copies = parseInt(data.copies, 10) || 0;
-    data.Id = parseInt(data.Id, 10) || 0;
+    data.CollectionId = parseInt(data.CollectionId, 10) || 0;
 
     try {
         const res = await fetch(API_CARTA, {

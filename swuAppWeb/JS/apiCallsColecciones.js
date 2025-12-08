@@ -117,7 +117,7 @@ async function mostrarColeccionConCartas(id) {
 
             div.innerHTML = `
             <div style='background-color: #222228; border-radius: 15px; width: -webkit-fill-available; padding: 10px;'>
-                <p style='background-color: #f0f0f0; font-weight: 800; color: ${collection.color}; margin-bottom: 10px;'>${collection.collectionName}</p>
+                <p style='background-color: #f0f0f0; font-weight: 800; color: ${collection.color}; margin-bottom: 10px;'>${c.cardName}</p>
                 <p style='border-radius: 15px;'>${c.subtitle ? `<span>${c.subtitle}</span>` : ''}</p>
             </div>
             <div style='background-color: #222228; border-radius: 15px; width: -webkit-fill-available; padding: 10px;'>

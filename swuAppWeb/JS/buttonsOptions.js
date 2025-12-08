@@ -1,3 +1,42 @@
+// GENERAL
+// GENERAL
+// GENERAL
+
+document.getElementById('volverAtrasColecciones').addEventListener('click', () => {
+    location.reload();
+});
+
+document.getElementById('volverAtrasCartas').addEventListener('click', () => {
+    location.reload();
+});
+
+document.getElementById('volverAtrasSobres').addEventListener('click', () => {
+    location.reload();
+});
+
+//SOBRESSS
+//SOBRESSS
+//SOBRESSS
+function mostrarOpcionAbrirSobre() {
+    const botonSobres = document.getElementById('sobres-buttonHome')
+    botonSobres.addEventListener('click', () => {
+        const seccionAbrirSobre = document.getElementById('abrirPacksContainer')
+        seccionAbrirSobre.style.display = 'flex'
+        seccionAbrirSobre.style.flexDirection = 'column'
+        const body = document.getElementsByTagName('body')
+        body[0].style.backgroundImage = "url('./src/backgroundImageAbrirSobres2.jpg')"
+        
+        botonSobres.style.display = 'none'
+        
+        const botonCartas = document.getElementById('cartas-buttonHome')
+        botonCartas.style.display = 'none'
+
+        const botonColecciones = document.getElementById('colecciones-buttonHome')
+        botonColecciones.style.display = 'none'
+    })
+}
+mostrarOpcionAbrirSobre();
+
 // COLECCIONES
 // COLECCIONES
 // COLECCIONES
@@ -9,11 +48,13 @@ function mostrarOpcionesColeccion() {
         const body = document.getElementsByTagName('body')
         body[0].style.backgroundImage = "url('./src/backgroundColecciones.png')"
         
-        const botonColecciones = document.getElementById('colecciones-buttonHome')
         botonColecciones.style.display = 'none'
         
         const botonCartas = document.getElementById('cartas-buttonHome')
         botonCartas.style.display = 'none'
+
+        const botonSobres = document.getElementById('sobres-buttonHome')
+        botonSobres.style.display = 'none';
     })
 }
 mostrarOpcionesColeccion();
@@ -173,6 +214,9 @@ function visibleSeccionartas() {
         
         const botonColecciones = document.getElementById('colecciones-buttonHome')
         botonColecciones.style.display = 'none'
+
+        const botonSobres = document.getElementById('sobres-buttonHome')
+        botonSobres.style.display = 'none';
     })
 }
 visibleSeccionartas();
