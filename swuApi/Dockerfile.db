@@ -1,0 +1,16 @@
+FROM mcr.microsoft.com/mssql/server:2019-CU21-ubuntu-20.04
+
+USER root
+
+# Copia los scripts y asigna permisos de ejecución
+COPY --chmod=0755 scripts/ /scripts/
+
+RUN chown -R mssql /scripts/
+
+# Vuelve al usuario no-root por seguridad.
+USER mssql
+
+EXPOSE 1433
+
+# Usa la nueva ruta donde copiaste el script
+CMD ["/scripts/entrypoint.sh"]
