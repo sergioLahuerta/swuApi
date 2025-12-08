@@ -88,16 +88,32 @@ CREATE TABLE Cards (
     FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
 );
 
-INSERT INTO Cards (CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo)
-VALUES
-('Luke Skywalker', 'Jedi Knight', 'Foil', 'Vigilance', 'Uncommon', 5, 1, 15.00, GETDATE(), 0),
-('Director Krennic', 'Aspira A La Autoridad', 'Standard', 'Vigilance', 'Rare', 1, 1, 0.00, GETDATE(), 0),
-('Darth Vader', 'Dark Lord', 'Standard', 'Command', 'Common', 1, 1, 30.50, GETDATE(), 0),
-('Fighter Wing', NULL, 'Showcase', 'Aggression', 'Rare', 150, 2, 5.00, GETDATE(), 0),
-('Rayo de Fuerza', NULL, 'Standard', 'Villany', 'Legendary', 138, 1, 0.00, GETDATE(), 0),
-('Moff Gideon', 'Imperial Commander', 'Hyperspace', 'Command', 'Legendary', 10, 2, 20.00, GETDATE(), 1),
-('Boba Fett', 'Piensa Cobrar La Recompensa', 'Showcase', 'Cunning', 'Common', 265, 1, 0.00, GETDATE(), 0),
-('Leia Organa', 'General De La Alianza', 'Standard', 'Command, Heroism', 'Common', 9, 1, 1.00, GETDATE(), 0);
+INSERT INTO Cards (CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo) VALUES
+('Luke Skywalker', 'Jedi Knight', 'Showcase', 'Vigilance', 'Uncommon', 5, 1, 15.00, GETDATE(), 0),
+('Jedi Guardian', NULL, 'Standard', 'Heroism', 'Common', 1, 1, 0.00, GETDATE(), 0),
+('Rebel Scout', NULL, 'Standard', 'Vigilance', 'Common', 2, 1, 0.00, GETDATE(), 0),
+('Alliance Sharpshooter', NULL, 'Foil', 'Aggression', 'Uncommon', 3, 1, 1.50, GETDATE(), 0),
+('Smuggler’s Gambit', NULL, 'Standard', 'Cunning', 'Common', 4, 1, 0.00, GETDATE(), 0),
+('Imperial Defector', NULL, 'Hyperspace', 'Command', 'Rare', 5, 1, 5.00, GETDATE(), 0),
+('Blaster Rifle Trooper', NULL, 'Standard', 'Aggression', 'Common', 6, 1, 0.00, GETDATE(), 0),
+('Rebel Saboteur', NULL, 'Showcase', 'Cunning', 'Uncommon', 7, 1, 2.50, GETDATE(), 0),
+('Jedi Apprentice', NULL, 'Foil', 'Heroism', 'Rare', 8, 1, 4.00, GETDATE(), 0),
+('Corellian Pilot', NULL, 'Standard', 'Vigilance', 'Common', 9, 1, 0.00, GETDATE(), 0),
+('Alliance Commander', NULL, 'Standard', 'Command', 'Common', 10, 1, 0.00, GETDATE(), 0),
+('Senate Envoy', NULL, 'Foil', 'Cunning', 'Uncommon', 11, 1, 1.75, GETDATE(), 0),
+('Secret Rebel Weapon', 'Prototype Blaster', 'Standard', 'Aggression', 'Legendary', 12, 1, 0.00, GETDATE(), 1),
+('Shadow Assassin', NULL, 'Standard', 'Villainy', 'Common', 1, 2, 0.00, GETDATE(), 0),
+('Underworld Informant', NULL, 'Foil', 'Cunning', 'Uncommon', 2, 2, 2.00, GETDATE(), 0),
+('Bounty Hunter Recruit', NULL, 'Standard', 'Aggression', 'Common', 3, 2, 0.00, GETDATE(), 0),
+('Smuggler Kingpin', NULL, 'Hyperspace', 'Cunning', 'Rare', 4, 2, 6.00, GETDATE(), 0),
+('Galactic Spy', NULL, 'Standard', 'Vigilance', 'Common', 5, 2, 0.00, GETDATE(), 0),
+('Dark Force Acolyte', NULL, 'Foil', 'Villainy', 'Uncommon', 6, 2, 3.50, GETDATE(), 0),
+('Rogue Droid Unit', NULL, 'Standard', 'Command', 'Common', 7, 2, 0.00, GETDATE(), 0),
+('Corrupted Admiral', NULL, 'Standard', 'Villainy', 'Rare', 8, 2, 8.00, GETDATE(), 0),
+('Smuggler’s Stash', 'Hidden Cargo', 'Standard', 'Cunning', 'Common', 9, 2, 0.00, GETDATE(), 0),
+('Galactic Bounty', NULL, 'Standard', 'Aggression', 'Common', 10, 2, 0.00, GETDATE(), 0),
+('Shadow Commander', NULL, 'Hyperspace', 'Villainy', 'Legendary', 11, 2, 0.00, GETDATE(), 1),
+('Encrypted Holocron', NULL, 'Foil', 'Cunning', 'Uncommon', 12, 2, 4.00, GETDATE(), 0);
 
 SELECT * FROM Cards;
 
