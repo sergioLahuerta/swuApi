@@ -1,26 +1,10 @@
-# Setup local db (Sql server) | Antiguo comando para levantar la DB
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=${password}" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-CU21-ubuntu-20.04
+SWU Api README.md || Pasos a seguir:
 
-# Comandos para levantar los contenedores | Docker
-docker compose up --build -d
-
-# Para subir la Imagen a DockerHub
-docker login
+# En la carpeta swuApi por CMD:
 docker-compose up --build -d
-docker images
-docker tag imagen-Id sergiolala/swuapi-sv:1.0.0
-docker push sergiolala/swuapi-sv:1.0.0
 
-# Para actualizar la imagen de la db
-docker build --no-cache -f Dockerfile.db -t sergiolala/swuapi-db:1.0.0 .
+# Para ver el Swagger:
+http://localhost:8309/swagger/index.html
 
-# Para actualizar la imagen de la api
-docker build --no-cache -f Dockerfile -t sergiolala/swuapi-sv:1.0.0 .
-
-# Para descargar la imagen
-docker pull sergiolala/swuapi-sv:1.0.0
-
-# Para crear el .env ejecutar script setup.sh en la raiz del proyecto en swuApi
-./scripts/setup.sh
-# Y después poner los valores de las variables pasados por comentario privado de la tarea en el Clasroom
-
+# Hay algunas funcionalidades implementadas correctamente en la web.
+Para verlas, en VSCode entrar en la carpeta swuAppWeb y darle a GoLive
