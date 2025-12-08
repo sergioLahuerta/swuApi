@@ -1,6 +1,4 @@
-using System.ComponentModel;
-
-namespace swuApi.DTOs
+namespace swuApi.CollectionDTOs
 {
     public class CollectionCreationDTO : ICollectionDTO
     {

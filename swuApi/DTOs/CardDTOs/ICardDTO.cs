@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using swuApi.Enums;
 
-namespace swuApi.DTOs
+namespace swuApi.CardDTOs
 {
     public abstract class ICardDTO
     {

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using swuApi.Models;
-using swuApi.DTOs;
 using swuApi.Services;
+using swuApi.CollectionDTOs;
 
 namespace swuApi.Controllers
 {

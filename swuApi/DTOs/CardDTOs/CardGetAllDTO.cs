@@ -1,4 +1,4 @@
-namespace swuApi.DTOs
+namespace swuApi.CardDTOs
 {
     public class CardGetAllDTO : ICardDTO
     {

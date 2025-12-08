@@ -1,8 +1,8 @@
 using System.ComponentModel;
 
-namespace swuApi.DTOs
+namespace swuApi.PackDTOs
 {
-    public class PackCreationDTO
+    public abstract class IPackDTO
     {
         public string PackName { get; set; } = string.Empty;
 

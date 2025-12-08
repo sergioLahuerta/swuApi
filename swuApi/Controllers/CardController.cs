@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using swuApi.Models;
-using swuApi.DTOs   ;
 using swuApi.Services;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using swuApi.CardDTOs;
 
 namespace swuApi.Controllers
 {
@@ -53,14 +51,30 @@ namespace swuApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Card>> Get(int id)
+        public async Task<ActionResult<CardGetAllDTO>> Get(int id)
         {
             try
             {
                 var card = await _cardService.GetByIdAsync(id);
                 if (card == null)
                     return NotFound();
-                return Ok(card);
+
+                var dto = new CardGetAllDTO
+                {
+                    Id = card.Id,
+                    CardName = card.CardName,
+                    Subtitle = card.Subtitle,
+                    Model = card.Model,
+                    Aspect = card.Aspect,
+                    Rarity = card.Rarity,
+                    CardNumber = card.CardNumber,
+                    Price = card.Price,
+                    DateAcquired = card.DateAcquired,
+                    IsPromo = card.IsPromo,
+                    CollectionId = card.CollectionId
+                };
+
+                return Ok(dto);
             }
             catch (ArgumentException ex)
             {
