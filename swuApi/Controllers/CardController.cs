@@ -21,14 +21,31 @@ namespace swuApi.Controllers
         // GET: api/Card?filterField=Aspect&filterValue=Vigilance&sortField=Price&sortDirection=desc
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Card>>> Get(
+        public async Task<ActionResult<IEnumerable<CardGetAllDTO>>> Get(
             [FromQuery] string? filterField,
             [FromQuery] string? filterValue,
             [FromQuery] string? sortField,
             [FromQuery] string? sortDirection)
         {
             var cards = await _cardService.GetFilteredAsync(filterField, filterValue, sortField, sortDirection);
-            return Ok(cards);
+
+            // Mapeo manual Model -> DTO
+            var result = cards.Select(c => new CardGetAllDTO
+            {
+                Id = c.Id,
+                CardName = c.CardName,
+                Subtitle = c.Subtitle,
+                Model = c.Model,
+                Aspect = c.Aspect,
+                Rarity = c.Rarity,
+                CardNumber = c.CardNumber,
+                Price = c.Price,
+                DateAcquired = c.DateAcquired,
+                IsPromo = c.IsPromo,
+                CollectionId = c.CollectionId
+            });
+
+            return Ok(result);
         }
 
         // GET: api/Card/3
