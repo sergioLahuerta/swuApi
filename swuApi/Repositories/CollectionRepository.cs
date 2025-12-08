@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using swuApi.DTOs;
 using swuApi.Models;
 
 namespace swuApi.Repositories
@@ -119,7 +120,7 @@ namespace swuApi.Repositories
         }
 
         // POST: AddAsync
-        public async Task AddAsync(Collection collection)
+        public async Task AddAsync(CollectionCreationDTO collectionDTO)
         {
             using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
@@ -130,14 +131,16 @@ namespace swuApi.Repositories
                 VALUES (@CollectionName, @Color, @NumCards, @EstimatedValue, @CreationDate, @IsComplete);
                 SELECT SCOPE_IDENTITY();"; // devuelve el Id generado
 
+            string query = @"INSERT INTO Collections (CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete) 
+                             VALUES (@CollectionName, @Color, @NumCards, @EstimatedValue, @CreationDate, @IsComplete)";
             using var command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@CollectionName", collection.CollectionName);
-            command.Parameters.AddWithValue("@Color", (object?)collection.Color ?? DBNull.Value);
-            command.Parameters.AddWithValue("@NumCards", collection.NumCards);
-            command.Parameters.AddWithValue("@EstimatedValue", collection.EstimatedValue);
-            command.Parameters.AddWithValue("@CreationDate", collection.CreationDate);
-            command.Parameters.AddWithValue("@IsComplete", collection.IsComplete);
+            command.Parameters.AddWithValue("@CollectionName", collectionDTO.CollectionName);
+            command.Parameters.AddWithValue("@Color", collectionDTO.Color ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@NumCards", collectionDTO.NumCards);
+            command.Parameters.AddWithValue("@EstimatedValue", collectionDTO.EstimatedValue);
+            command.Parameters.AddWithValue("@CreationDate", collectionDTO.CreationDate);
+            command.Parameters.AddWithValue("@IsComplete", collectionDTO.IsComplete);
 
             // Obtener el Id generado automáticamente y asignarlo al objeto
             var id = await command.ExecuteScalarAsync();
@@ -145,7 +148,7 @@ namespace swuApi.Repositories
         }
 
         // PUT: UpdateAsync
-        public async Task UpdateAsync(Collection collection)
+        public async Task UpdateAsync(CollectionUpdateDTO collectionDTO)
         {
             using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
