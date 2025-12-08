@@ -18,6 +18,13 @@ builder.Services.AddCors(options =>
 // Connection string, mismo que en appsettings
 var connectionString = builder.Configuration.GetConnectionString("SWUPersonalApi");
 
+// Deserializar para que los enums no devuelvan el binario al que corresponde su valor sino el string que representa ese binario
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
+
 // Dependencias Repositories
 builder.Services.AddScoped<IRepository<Collection>, CollectionRepository>(provider =>
     new CollectionRepository(connectionString!));
