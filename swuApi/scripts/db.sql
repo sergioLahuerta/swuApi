@@ -1,0 +1,124 @@
+-- Creo la Base de Datos (solo si no existe)
+IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'swuDB')
+    CREATE DATABASE swuDB;
+GO
+
+USE swuDB;
+GO
+SELECT name, database_id, create_date 
+FROM sys.databases 
+WHERE name = 'swuDB';
+
+/* Función Helper para eliminar tablas en orden si existen, respetando las FK */
+IF OBJECT_ID('swuDB.dbo.UserCards', 'U') IS NOT NULL DROP TABLE UserCards;
+IF OBJECT_ID('swuDB.dbo.Cards', 'U') IS NOT NULL DROP TABLE Cards;
+IF OBJECT_ID('swuDB.dbo.Packs', 'U') IS NOT NULL DROP TABLE Packs;
+IF OBJECT_ID('swuDB.dbo.Users', 'U') IS NOT NULL DROP TABLE Users;
+IF OBJECT_ID('swuDB.dbo.Collections', 'U') IS NOT NULL DROP TABLE Collections;
+
+/*------------- Colecciones -------------*/
+CREATE TABLE Collections (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    CollectionName NVARCHAR(100) NOT NULL,
+    Color NVARCHAR(100),
+    NumCards INT NOT NULL DEFAULT 0,
+    EstimatedValue DECIMAL(10, 2) NOT NULL CHECK (EstimatedValue >= 0),
+    CreationDate DATETIME NOT NULL,
+    IsComplete BIT NOT NULL DEFAULT 0
+);
+
+INSERT INTO Collections (CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete)
+VALUES
+('Spark of Rebellion', '#e10600', 252, 500.00, GETDATE(), 0),
+('Shadows of the Galaxy', '#3b3fb6', 250, 750.50, GETDATE(), 0);
+
+SELECT * FROM Collections;
+
+/*------------- Usuarios -------------*/
+CREATE TABLE Users (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Username NVARCHAR(50) NOT NULL UNIQUE, 
+    Email NVARCHAR(100) NOT NULL UNIQUE,  
+    PasswordHash NVARCHAR(256) NOT NULL, 
+    RegistrationDate DATETIME NOT NULL,
+    IsActive BIT NOT NULL DEFAULT 1,
+    TotalCollectionValue DECIMAL(10, 2) NOT NULL CHECK (TotalCollectionValue >= 0) DEFAULT 0
+);
+
+INSERT INTO Users (Username, Email, PasswordHash, RegistrationDate, IsActive, TotalCollectionValue)
+VALUES
+('HanShotFirst', 'han@falcon.com', 'hashed_pwd_123', GETDATE(), 1, 550.75),
+('LukeJedi', 'luke@jedi.net', 'hashed_pwd_456', GETDATE(), 1, 1200.00);
+
+SELECT * FROM Users;
+
+/*------------- Sobres -------------*/
+CREATE TABLE Packs (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    PackName NVARCHAR(100) NOT NULL,
+    NumberOfCards INT NOT NULL CHECK (NumberOfCards = 16) DEFAULT 16,
+    ShowcaseRarityOdds INT NOT NULL CHECK (ShowcaseRarityOdds >= 1),
+    GuaranteesRare BIT NOT NULL DEFAULT 1,
+    Price DECIMAL(10, 2) NOT NULL CHECK (Price >= 0),
+    ReleaseDate DATETIME NOT NULL,
+    CollectionId INT NOT NULL,
+    FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
+);
+
+INSERT INTO Packs (PackName, NumberOfCards, ShowcaseRarityOdds, Price, ReleaseDate, CollectionId)
+VALUES
+('Booster Pack SoR', 16, 288, 4.99, GETDATE(), 1),
+('Booster Pack SoG', 16, 288, 4.99, GETDATE(), 2);
+
+SELECT * FROM Packs;
+
+/*------------- Cartas -------------*/
+CREATE TABLE Cards (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    CardName NVARCHAR(100) NOT NULL,
+    Subtitle NVARCHAR(100) NULL,
+    Model NVARCHAR(50) NOT NULL DEFAULT 'Standard',
+    Aspect NVARCHAR(50) NULL,
+    Rarity NVARCHAR(50) NOT NULL DEFAULT 'Common',
+    CardNumber INT NOT NULL,
+    CollectionId INT NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL CHECK (Price >= 0),
+    DateAcquired DATETIME NOT NULL,
+    IsPromo BIT NOT NULL DEFAULT 0,
+    FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
+);
+
+INSERT INTO Cards (CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo)
+VALUES
+('Luke Skywalker', 'Jedi Knight', 'Foil', 'Vigilance', 'Uncommon', 5, 1, 15.00, GETDATE(), 0),
+('Darth Vader', 'Dark Lord', 'Standard', 'Command', 'Common', 1, 1, 30.50, GETDATE(), 0),
+('Fighter Wing', NULL, 'Showcase', 'Aggression', 'Rare', 150, 2, 5.00, GETDATE(), 0),
+('Moff Gideon', 'Imperial Commander', 'Hyperspace', 'Command', 'Legendary', 10, 2, 20.00, GETDATE(), 1);
+
+SELECT * FROM Cards;
+
+/*------------- Inventario Personal -------------*/
+CREATE TABLE UserCards (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    UserId INT NOT NULL,
+    CardId INT NOT NULL,
+    Copies INT NOT NULL CHECK (Copies >= 1) DEFAULT 1,
+    DateAdded DATETIME NOT NULL, 
+    IsFavorite BIT NOT NULL DEFAULT 0,
+    
+    CONSTRAINT UQ_UserCard UNIQUE (UserId, CardId),
+    
+    FOREIGN KEY (UserId) REFERENCES Users(Id),
+    FOREIGN KEY (CardId) REFERENCES Cards(Id)
+);
+
+INSERT INTO UserCards (UserId, CardId, Copies, DateAdded)
+VALUES (1, 1, 2, GETDATE());
+
+INSERT INTO UserCards (UserId, CardId, Copies, DateAdded)
+VALUES (2, 2, 1, GETDATE());
+
+INSERT INTO UserCards (UserId, CardId, Copies, DateAdded)
+VALUES (1, 3, 5, GETDATE());
+
+SELECT * FROM UserCards;

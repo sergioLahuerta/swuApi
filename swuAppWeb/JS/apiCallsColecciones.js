@@ -1,6 +1,6 @@
 // Cambia estas rutas a la URL real de tu backend
-const API_COLECCION = "https://localhost:7284/api/Collection";
-const API_CARTA = "https://localhost:7284/api/Card";
+const API_COLECCION = "http://localhost:8309/api/Collection";
+const API_CARTA = "http://localhost:8309/api/Card";
 
 async function getColeccionById(id) {
     const response = await fetch(`${API_COLECCION}/${id}`);
@@ -13,7 +13,7 @@ async function getColeccionById(id) {
 document.getElementById('crearColeccionForm').onsubmit = async function(e) {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(this));
-    data.CardNum = parseInt(data.CardNum, 10);
+    data.numCards = parseInt(data.numCards, 10);
 
     const msgElementoCrear = document.getElementById('coleccionMsgCrear');
 
@@ -69,55 +69,58 @@ function colorFondoCard(color, percent) {
 
 // Obtener colección con cartas por Id
 async function mostrarColeccionConCartas(id) {
-    const res = await fetch(`${API_COLECCION}/${id}/detalles`);
+    const res = await fetch(`${API_COLECCION}/${id}`);
     if (!res.ok) {
         alert('Error cargando colección');
         return;
     }
-    const coleccion = await res.json();
-    const color = coleccion.color;
+    const collection = await res.json();
+    const color = collection.color;
 
     // Mostrar las cartas
     const cartasContainer = document.getElementById('cartasColeccion');
     cartasContainer.innerHTML = `<h3 style= 'width: fit-content; background: linear-gradient(120deg,#cfffdf,#274eb7,#b7c7fc 75%); background-size: 400% 400%; animation: holo 8s ease infinite; color: ${color}; font-weight: 900; padding: 18px 44px; border-radius: 13px; box-shadow: 0 4px 18px rgba(60,80,130,.22); font-size: 2.1rem; border: 2px solid #b0e4ff; @keyframes holo { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%'>Cartas de la colección:</h3>`;
 
-    if (coleccion.cartas && coleccion.cartas.length > 0) {
+    if (collection.cards && collection.cards.length > 0) {
         const divContenedor = document.createElement('div');
         divContenedor.className = 'cartas-contenedor';
         divContenedor.style.cssText = `width: fit-content; display: flex; gap: 10px; padding: 15px; border-radius: 15px;`;
-        coleccion.cartas.forEach(c => {
+        collection.cards.forEach(c => {
         const div = document.createElement('div');
         div.className = 'carta-item';
         const colorDark = colorFondoCard(color, -55);
         div.style.background = `linear-gradient(180deg, ${color} 80%, ${colorDark} 100%)`;
         
-        if(c.modelo === 'Foil') {
+        if(c.model === 'Foil') {
             div.style.filter = 'brightness(1.2)'
         }
 
-        if(c.modelo === 'Hyperspace') {
+        if(c.model === 'Hyperspace') {
             div.style.background = `linear-gradient(180deg, #222228 80%, #222228 100%)`;
         }
         
-        if(c.modelo === 'Hyperspace Foil') {
+        if(c.model === 'Hyperspace Foil') {
             div.style.background = `linear-gradient(180deg, #222228 80%, #222228 100%)`;
             div.style.filter = 'brightness(1.2)'
         }
         
         div.innerHTML = `
         <div style='background-color: #222228; border-radius: 15px; width: -webkit-fill-available; padding: 10px;'>
-            <p style='background-color: #f0f0f0; font-weight: 800; color: ${coleccion.color}; margin-bottom: 10px;'>${c.CollectionName}</p>
+            <p style='background-color: #f0f0f0; font-weight: 800; color: ${collection.color}; margin-bottom: 10px;'>${c.collectionName}</p>
             <p style='border-radius: 15px;'>${c.subtitle ? `<span>${c.subtitle}</span>` : ''}</p>
         </div>
         <div style='background-color: #222228; border-radius: 15px; width: -webkit-fill-available; padding: 10px;'>
             <p style='background-color: #f0f0f0; color: #000000;'><span>Copias:</span> ${c.copies}</p>
-            <p>${c.modelo}</p>
-            <p>${c.numeroCarta}/${coleccion.CardNumber}</p>
+            <p>${c.model}</p>
+            <p>${c.cardNumber}/${collection.cardNumber}</p>
         </div>
             `;
         divContenedor.appendChild(div);
         cartasContainer.appendChild(divContenedor);
         });
+
+        console.log(cards);
+
     } else {
         cartasContainer.innerHTML += '<p>No hay cartas en esta colección.</p>';
     }
@@ -133,10 +136,10 @@ async function mostrarColecciones() {
     try {
         const res = await fetch(API_COLECCION);
         if (!res.ok) throw new Error('Error al obtener colecciones');
-        const colecciones = await res.json();
+        const collection = await res.json();
         resultadosColecciones.innerHTML = '';
 
-        if (colecciones.length === 0) {
+        if (collection.length === 0) {
         msgElementos.style.backgroundColor = '#b33939';
         msgElementos.style.borderColor = '#b33939';
         msgElementos.innerText = 'No hay colecciones disponibles';
@@ -144,12 +147,12 @@ async function mostrarColecciones() {
         return;
         }
 
-        colecciones.forEach(c => {
+        collection.forEach(c => {
             const btnCard = document.createElement('button');
             btnCard.type = 'button';
             btnCard.className = 'coleccion-item';
             btnCard.style.backgroundColor = c.color
-            btnCard.innerHTML = `<h3 style= 'font-weight: 700;'>${c.CollectionName}, ${c.color}</h3><p style='color: white;'>Número de cartas: ${c.CardNumber}</p>`;
+            btnCard.innerHTML = `<h3 style= 'font-weight: 700;'>${c.collectionName}, ${c.color}</h3><p style='color: white;'>Número de cartas: ${c.numCards}</p>`;
             btnCard.addEventListener('click', () => {
                 mostrarColeccionConCartas(c.id);
             });
@@ -165,7 +168,7 @@ async function mostrarColecciones() {
         console.error('Error obteniendo colecciones:', err);
     }    
 }
-// LLamada a la función en buttonsOption.js crack
+// LLamada a la función en buttonsOption.js
 
 // Actualizar Colección
 document.getElementById('actualizarColeccionForm').onsubmit = async function(e) {
@@ -180,9 +183,9 @@ document.getElementById('actualizarColeccionForm').onsubmit = async function(e) 
             body: JSON.stringify({
                 idActual: parseInt(data.idActual, 10),
                 nuevoId: parseInt(data.nuevoId, 10),
-                CollectionName: data.CollectionName,
+                CollectionName: data.collectionName,
                 color: data.color,
-                CardNumber: parseInt(data.CardNumber, 10)
+                CardNumber: parseInt(data.numCards, 10)
             })
         });
 
@@ -213,8 +216,8 @@ document.getElementById('borrarColeccionForm').onsubmit = async function(e) {
     const msgElementoBorrar = document.getElementById('coleccionMsgBorrar');
 
     // Comprobar si la colección existe antes de borrar
-    const coleccion = await getColeccionById(id);
-    if (!coleccion) {
+    const collection = await getColeccionById(id);
+    if (!collection) {
         msgElementoBorrar.innerText = `La colección con el Id: ${id} no existe`;
         msgElementoBorrar.style.backgroundColor = '#b33939';
         msgElementoBorrar.style.borderColor = '#b33939';

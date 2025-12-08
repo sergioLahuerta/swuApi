@@ -7,7 +7,7 @@ function mostrarOpcionesColeccion() {
         const seccionColecciones = document.getElementById('colecciones')
         seccionColecciones.style.display = 'flex'
         const body = document.getElementsByTagName('body')
-        body[0].style.backgroundImage = "url('../src/backgroundColecciones.png')"
+        body[0].style.backgroundImage = "url('./src/backgroundColecciones.png')"
         
         const botonColecciones = document.getElementById('colecciones-buttonHome')
         botonColecciones.style.display = 'none'
@@ -166,7 +166,7 @@ function visibleSeccionartas() {
         seccionCartas.style.display = 'flex'
         seccionCartas.style.flexDirection = 'row'
         const body = document.getElementsByTagName('body')
-        body[0].style.backgroundImage = "url('../src/backgroundCartas.jpg')"
+        body[0].style.backgroundImage = "url('./src/backgroundCartas.jpg')"
         
         const botonCartas = document.getElementById('cartas-buttonHome')
         botonCartas.style.display = 'none'

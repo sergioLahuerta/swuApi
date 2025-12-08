@@ -7,9 +7,9 @@ namespace swuApi.Services
 {
     public class CardService : IService<Card>
     {
-        private readonly IRepository<Card> _cardRepository;
+        private readonly IPackOpeningRepository _cardRepository;
 
-        public CardService(IRepository<Card> cardRepository)
+        public CardService(IPackOpeningRepository cardRepository)
         {
             _cardRepository = cardRepository;
         }
