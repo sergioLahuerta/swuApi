@@ -3,7 +3,7 @@ using swuApi.Models;
 
 namespace swuApi.Services
 {
-    public interface IUserCardService 
+    public interface IUserCardService : IService<UserCard>
     {
         Task<UserCard> AddCardToInventoryAsync(UserCardCreationDTO dto);
         Task RemoveCardFromInventoryAsync(int userId, int cardId, int copiesToRemove);

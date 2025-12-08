@@ -10,9 +10,9 @@ namespace swuApi.Controllers
     [Route("api/[controller]")]
     public class UserCardController : ControllerBase
     {
-        private readonly IService<UserCard> _userCardService;
+        private readonly IUserCardService _userCardService;
 
-        public UserCardController(IService<UserCard> userCardService)
+        public UserCardController(IUserCardService userCardService)
         {
             _userCardService = userCardService;
         }
@@ -106,6 +106,53 @@ namespace swuApi.Controllers
 
             await _userCardService.DeleteAsync(id);
             return NoContent();
+        }
+
+        // POST: api/UserCard/AddCardToInventory
+        [HttpPost("AddCardToInventory")]
+        public async Task<IActionResult> AddCardToInventory([FromBody] UserCardCreationDTO dto)
+        {
+            try
+            {
+                // Llamamos al método AddCardToInventoryAsync desde el servicio
+                var userCard = await _userCardService.AddCardToInventoryAsync(dto);
+                
+                // Retornar el resultado en formato DTO
+                var result = new UserCardGetAllDTO
+                {
+                    Id = userCard.Id,
+                    UserId = userCard.UserId,
+                    CardId = userCard.CardId,
+                    Copies = userCard.Copies,
+                    DateAdded = userCard.DateAdded,
+                    IsFavorite = userCard.IsFavorite,
+                    UserName = userCard.User?.Username,
+                    CardName = userCard.Card?.CardName
+                };
+
+                return CreatedAtAction(nameof(Get), new { id = userCard.Id }, result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // POST: api/UserCard/RemoveCardFromInventory
+        [HttpPost("RemoveCardFromInventory")]
+        public async Task<IActionResult> RemoveCardFromInventory([FromBody] UserCardRemovalDTO dto)
+        {
+            try
+            {
+                // Llamamos al método RemoveCardFromInventoryAsync desde el servicio
+                await _userCardService.RemoveCardFromInventoryAsync(dto.UserId, dto.CardId, dto.CopiesToRemove);
+                
+                return NoContent(); // No content ya que la operación se completó correctamente
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

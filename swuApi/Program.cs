@@ -40,7 +40,7 @@ builder.Services.AddScoped<IService<Collection>, CollectionService>();
 builder.Services.AddScoped<IService<Pack>, PackService>();
 builder.Services.AddScoped<IPackOpeningService, PackOpeningService>();
 builder.Services.AddScoped<IService<User>, UserService>();
-builder.Services.AddScoped<IUserCardService, UserCardService>();
+builder.Services.AddScoped<IService<UserCard>, UserCardService>();
 
 
 // Otros servicios del Framework
