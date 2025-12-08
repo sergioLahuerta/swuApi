@@ -17,9 +17,10 @@ namespace swuApi.Controllers
         }
 
         // GET: api/Card?filterField=Aspect&filterValue=Vigilance&sortField=Price&sortDirection=desc
+        // GET: api/Card?filterField=Aspect&filterValue=Vigilance&sortField=Price&sortDirection=desc
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<CardGetAllDTO>>> Get(
+        public async Task<ActionResult<IEnumerable<Card>>> Get(
             [FromQuery] string? filterField,
             [FromQuery] string? filterValue,
             [FromQuery] string? sortField,
@@ -27,23 +28,8 @@ namespace swuApi.Controllers
         {
             var cards = await _cardService.GetFilteredAsync(filterField, filterValue, sortField, sortDirection);
 
-            // Mapeo manual Model -> DTO
-            var result = cards.Select(c => new CardGetAllDTO
-            {
-                Id = c.Id,
-                CardName = c.CardName,
-                Subtitle = c.Subtitle,
-                Model = c.Model,
-                Aspect = c.Aspect,
-                Rarity = c.Rarity,
-                CardNumber = c.CardNumber,
-                Price = c.Price,
-                DateAcquired = c.DateAcquired,
-                IsPromo = c.IsPromo,
-                CollectionId = c.CollectionId
-            });
-
-            return Ok(result);
+            // Devuelve directamente el modelo Card (sin mapear a DTO)
+            return Ok(cards);
         }
 
         // GET: api/Card/3
@@ -51,7 +37,7 @@ namespace swuApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CardGetAllDTO>> Get(int id)
+        public async Task<ActionResult<CardGetByIdDTO>> Get(int id)
         {
             try
             {
@@ -59,7 +45,7 @@ namespace swuApi.Controllers
                 if (card == null)
                     return NotFound();
 
-                var dto = new CardGetAllDTO
+                var dto = new CardGetByIdDTO
                 {
                     Id = card.Id,
                     CardName = card.CardName,
