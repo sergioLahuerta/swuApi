@@ -14,5 +14,13 @@ docker push sergiolala/swuapi-sv:1.0.0
 # Para actualizar la imagen de la db
 docker build --no-cache -f Dockerfile.db -t sergiolala/swuapi-db:1.0.0 .
 
+# Para actualizar la imagen de la api
+docker build --no-cache -f Dockerfile -t sergiolala/swuapi-sv:1.0.0 .
+
 # Para descargar la imagen
 docker pull sergiolala/swuapi-sv:1.0.0
+
+# Para crear el .env ejecutar script setup.sh en la raiz del proyecto en swuApi
+./scripts/setup.sh
+# Y después poner los valores de las variables pasados por comentario privado de la tarea en el Clasroom
+

@@ -60,14 +60,9 @@ namespace swuApi.Controllers
                 CollectionName = collectionDTO.CollectionName,
                 Color = collectionDTO.Color,
                 NumCards = collectionDTO.NumCards,
-                EstimatedValue = collectionDTO.EstimatedValue,
-                
-                // Usamos el valor del DTO, si es nulo, el servicio pondrá UtcNow
+                EstimatedValue = collectionDTO.EstimatedValue,                
                 CreationDate = collectionDTO.CreationDate ?? default(DateTime), 
-                
                 IsComplete = collectionDTO.IsComplete,
-                
-                // Las propiedades de navegación (Cards) se omiten en la creación
             };
 
             try
@@ -97,15 +92,14 @@ namespace swuApi.Controllers
             try
             {
                 await _collectionService.UpdateAsync(collection);
-                return NoContent(); // Código de estado 204 No Content (Éxito sin contenido de respuesta)
-            }
+                return NoContent();            }
             catch (ArgumentException ex)
             {
-                return BadRequest(ex.Message); // 400
+                return BadRequest(ex.Message);
             }
-            catch (KeyNotFoundException) // Asumiendo que el servicio lanza esto si no existe
+            catch (KeyNotFoundException)
             {
-                return NotFound(); // 404
+                return NotFound();
             }
         }
 

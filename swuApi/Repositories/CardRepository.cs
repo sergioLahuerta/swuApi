@@ -5,7 +5,7 @@ using System.Data.Common;
 
 namespace swuApi.Repositories
 {
-    public class CardRepository : IPackOpeningRepository
+    public class CardRepository : IPackOpeningRepository // Asumiendo que IPackOpeningRepository es tu interfaz
     {
         private readonly string _connectionString;
 
@@ -19,7 +19,7 @@ namespace swuApi.Repositories
             "CardName", "Model", "Aspect", "Rarity", "CardNumber", "CollectionId", "Price", "DateAcquired", "IsPromo"
         };
 
-        // Función de mapeo unificada para manejar la conversión de string a enum
+        // Función de mapeo unificada para manejar la conversión de string a enum (Se mantiene igual)
         private Card MapToCard(DbDataReader reader)
         {
             string aspectString = reader.IsDBNull(4) ? "None" : reader.GetString(4);
@@ -30,8 +30,6 @@ namespace swuApi.Repositories
                 Id = reader.GetInt32(0),
                 CardName = reader.GetString(1),
                 Subtitle = subtitleString,
-
-                // Mapeo del enum, obteniendo la cadena del .sql y conviertiéndola a enum
                 Model = (CardModelType)Enum.Parse(typeof(CardModelType), reader.GetString(3)),
                 Aspect = (CardAspectType)Enum.Parse(typeof(CardAspectType), aspectString),
                 Rarity = (CardRarityType)Enum.Parse(typeof(CardRarityType), reader.GetString(5)),
@@ -43,22 +41,10 @@ namespace swuApi.Repositories
             };
         }
 
-        // Método para obtener el ID máximo
-        public async Task<int> GetMaxIdAsync()
-        {
-            using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
-
-            string query = "SELECT ISNULL(MAX(Id), 0) FROM Cards";
-            using var command = new SqlCommand(query, connection);
-
-            var result = await command.ExecuteScalarAsync();
-            return (int)result;
-        }
-
-        // GetFilteredAsync: Obtener Cartas filtradas y ordenadas
+        // GetFilteredAsync (Se mantiene igual)
         public async Task<List<Card>> GetFilteredAsync(string? filterField, string? filterValue, string? sortField, string? sortDirection)
         {
+            // ... (Lógica de filtrado y ordenación) ...
             var cards = new List<Card>();
 
             var baseQuery = @"
@@ -71,10 +57,8 @@ namespace swuApi.Repositories
             // Cláusula where para filtraje
             if (!string.IsNullOrWhiteSpace(filterField) && !string.IsNullOrWhiteSpace(filterValue))
             {
-                // Valido que el campo existe
                 if (ValidFields.Contains(filterField))
                 {
-                    // LIKE para búsquedas parciales
                     whereClause = $" WHERE {filterField} LIKE @FilterValue";
                     parameters.Add("@FilterValue", $"%{filterValue}%");
                 }
@@ -83,34 +67,26 @@ namespace swuApi.Repositories
             // También construir la cláusula ORDER BY
             if (!string.IsNullOrWhiteSpace(sortField))
             {
-                // Lo mismo
                 if (ValidFields.Contains(sortField))
                 {
-                    // Determinar la dirección ascendente
                     var direction = "ASC";
                     if (sortDirection != null && sortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase))
                     {
                         direction = "DESC";
                     }
-
-                    // Inserción del campo validado y la dirección
                     orderByClause = $" ORDER BY {sortField} {direction}";
                 }
             }
 
-            // Añadir a la consulta el filtrado
             string finalQuery = baseQuery + whereClause + orderByClause;
 
-            // Ejecutarla
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 using (var command = new SqlCommand(finalQuery, connection))
                 {
-                    // Añadir parámetros de filtrado si existen
                     foreach (var param in parameters)
                     {
-                        // Uso AddWithValue para la seguridad contra inyección SQL
                         command.Parameters.AddWithValue(param.Key, param.Value);
                     }
 
@@ -126,7 +102,7 @@ namespace swuApi.Repositories
             return cards;
         }
 
-        // GetAllAsync: Obtener todas las Cartas
+        // GetAllAsync (Se mantiene igual)
         public async Task<List<Card>> GetAllAsync()
         {
             var cards = new List<Card>();
@@ -150,7 +126,7 @@ namespace swuApi.Repositories
             return cards;
         }
 
-        // GetByIdAsync: Obtener Carta por ID
+        // GetByIdAsync (Se mantiene igual)
         public async Task<Card?> GetByIdAsync(int id)
         {
             Card? card = null;
@@ -176,9 +152,9 @@ namespace swuApi.Repositories
             return card;
         }
 
+        // GetAllCardsInCollectionAsync (Se mantiene igual)
         public async Task<List<Card>> GetAllCardsInCollectionAsync(int collectionId)
         {
-            // Lógica para obtener las cartas filtrando por CollectionId
             string query = "SELECT Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo FROM Cards WHERE CollectionId = @CollectionId";
 
             var cards = new List<Card>();
@@ -198,21 +174,19 @@ namespace swuApi.Repositories
             return cards;
         }
 
-        // AddAsync: Crear nueva Carta
+        // AddAsync: POST
         public async Task AddAsync(Card card)
         {
             using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
 
-            int newId = await GetMaxIdAsync() + 1;
-            card.Id = newId;
-
-            string query = @"INSERT INTO Cards (Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo) VALUES (@Id, @CardName, @Subtitle, @Model, @Aspect, @Rarity, @CardNumber, @CollectionId, @Price, @DateAcquired, @IsPromo)";
+            string query = @"INSERT INTO Cards 
+                             (CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo) 
+                             VALUES (@CardName, @Subtitle, @Model, @Aspect, @Rarity, @CardNumber, @CollectionId, @Price, @DateAcquired, @IsPromo);
+                             SELECT SCOPE_IDENTITY();";
             
             using var command = new SqlCommand(query, connection);
-
-            // Uso .ToString() para convertir el enum a la cadena NVARCHAR del .sql
-            command.Parameters.AddWithValue("@Id", card.Id);
+            
             command.Parameters.AddWithValue("@CardName", card.CardName);
             command.Parameters.AddWithValue("@Subtitle", card.Subtitle ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@Model", card.Model.ToString());
@@ -224,10 +198,16 @@ namespace swuApi.Repositories
             command.Parameters.AddWithValue("@DateAcquired", card.DateAcquired);
             command.Parameters.AddWithValue("@IsPromo", card.IsPromo);
 
-            await command.ExecuteNonQueryAsync();
+            // 5. Ejecutar como escalar y asignar el ID de vuelta
+            var newId = await command.ExecuteScalarAsync();
+
+            if (newId != null && newId != DBNull.Value)
+            {
+                card.Id = Convert.ToInt32(newId);
+            }
         }
 
-        // UpdateAsync: Actualizar Carta existente
+        // UpdateAsync: PUT
         public async Task UpdateAsync(Card card)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -238,7 +218,6 @@ namespace swuApi.Repositories
                 
                 using (var command = new SqlCommand(query, connection))
                 {
-                    // Uso .ToString() para convertir el enum a la cadena NVARCHAR del .sql
                     command.Parameters.AddWithValue("@Id", card.Id);
                     command.Parameters.AddWithValue("@CardName", card.CardName);
                     command.Parameters.AddWithValue("@Subtitle", card.Subtitle ?? (object)DBNull.Value);
@@ -256,7 +235,7 @@ namespace swuApi.Repositories
             }
         }
 
-        // DeleteAsync: Eliminar Carta
+        // DeleteAsync (Se mantiene igual)
         public async Task DeleteAsync(int id)
         {
             using (var connection = new SqlConnection(_connectionString))
