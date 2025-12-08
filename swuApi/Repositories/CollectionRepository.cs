@@ -40,7 +40,7 @@ namespace swuApi.Repositories
             await connection.OpenAsync();
 
             string query = @"
-                SELECT Id, CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete 
+                SELECT Id, CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete
                 FROM Collections";
 
             using var command = new SqlCommand(query, connection);
@@ -60,7 +60,7 @@ namespace swuApi.Repositories
             await connection.OpenAsync();
 
             string query = @"
-                SELECT Id, CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete 
+                SELECT Id, CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete
                 FROM Collections WHERE Id = @Id";
 
             using var command = new SqlCommand(query, connection);
@@ -84,7 +84,7 @@ namespace swuApi.Repositories
             var parameters = new Dictionary<string, object>();
 
             string baseQuery = @"
-                SELECT Id, CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete 
+                SELECT Id, CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete
                 FROM Collections";
 
             if (!string.IsNullOrWhiteSpace(filterField) && !string.IsNullOrWhiteSpace(filterValue) && ValidFields.Contains(filterField))
@@ -120,46 +120,44 @@ namespace swuApi.Repositories
         }
 
         // POST: AddAsync
-        public async Task AddAsync(CollectionCreationDTO collectionDTO)
+        public async Task AddAsync(Collection collection)
         {
             using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
 
             string query = @"
-                INSERT INTO Collections 
-                (CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete) 
+                INSERT INTO Collections
+                (CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete)
                 VALUES (@CollectionName, @Color, @NumCards, @EstimatedValue, @CreationDate, @IsComplete);
                 SELECT SCOPE_IDENTITY();"; // devuelve el Id generado
 
-            string query = @"INSERT INTO Collections (CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete) 
-                             VALUES (@CollectionName, @Color, @NumCards, @EstimatedValue, @CreationDate, @IsComplete)";
             using var command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@CollectionName", collectionDTO.CollectionName);
-            command.Parameters.AddWithValue("@Color", collectionDTO.Color ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@NumCards", collectionDTO.NumCards);
-            command.Parameters.AddWithValue("@EstimatedValue", collectionDTO.EstimatedValue);
-            command.Parameters.AddWithValue("@CreationDate", collectionDTO.CreationDate);
-            command.Parameters.AddWithValue("@IsComplete", collectionDTO.IsComplete);
+            command.Parameters.AddWithValue("@CollectionName", collection.CollectionName);
+            command.Parameters.AddWithValue("@Color", collection.Color ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@NumCards", collection.NumCards);
+            command.Parameters.AddWithValue("@EstimatedValue", collection.EstimatedValue);
+            command.Parameters.AddWithValue("@CreationDate", collection.CreationDate);
+            command.Parameters.AddWithValue("@IsComplete", collection.IsComplete);
 
-            // Obtener el Id generado automáticamente y asignarlo al objeto
+            // Obtener el Id generado autom├íticamente y asignarlo al objeto
             var id = await command.ExecuteScalarAsync();
             collection.Id = Convert.ToInt32(id);
         }
 
         // PUT: UpdateAsync
-        public async Task UpdateAsync(CollectionUpdateDTO collectionDTO)
+        public async Task UpdateAsync(Collection collection)
         {
             using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
 
             string query = @"
-                UPDATE Collections SET 
-                    CollectionName=@CollectionName, 
-                    Color=@Color, 
-                    NumCards=@NumCards, 
-                    EstimatedValue=@EstimatedValue, 
-                    CreationDate=@CreationDate, 
+                UPDATE Collections SET
+                    CollectionName=@CollectionName,
+                    Color=@Color,
+                    NumCards=@NumCards,
+                    EstimatedValue=@EstimatedValue,
+                    CreationDate=@CreationDate,
                     IsComplete=@IsComplete
                 WHERE Id=@Id";
 
@@ -171,7 +169,6 @@ namespace swuApi.Repositories
             command.Parameters.AddWithValue("@EstimatedValue", collection.EstimatedValue);
             command.Parameters.AddWithValue("@CreationDate", collection.CreationDate);
             command.Parameters.AddWithValue("@IsComplete", collection.IsComplete);
-            command.Parameters.AddWithValue("@Id", collection.Id);
 
             await command.ExecuteNonQueryAsync();
         }

@@ -5,7 +5,7 @@ using System.Data.Common;
 
 namespace swuApi.Repositories
 {
-    public class CardRepository : IPackOpeningRepository // Asumiendo que IPackOpeningRepository es tu interfaz
+    public class CardRepository : IPackOpeningRepository
     {
         private readonly string _connectionString;
 
@@ -19,7 +19,7 @@ namespace swuApi.Repositories
             "CardName", "Model", "Aspect", "Rarity", "CardNumber", "CollectionId", "Price", "DateAcquired", "IsPromo"
         };
 
-        // Función de mapeo unificada para manejar la conversión de string a enum (Se mantiene igual)
+        // Funci├│n de mapeo unificada para manejar la conversi├│n de string a enum (Se mantiene igual)
         private Card MapToCard(DbDataReader reader)
         {
             string aspectString = reader.IsDBNull(4) ? "None" : reader.GetString(4);
@@ -44,17 +44,17 @@ namespace swuApi.Repositories
         // GetFilteredAsync (Se mantiene igual)
         public async Task<List<Card>> GetFilteredAsync(string? filterField, string? filterValue, string? sortField, string? sortDirection)
         {
-            // ... (Lógica de filtrado y ordenación) ...
+            // ... (L├│gica de filtrado y ordenaci├│n) ...
             var cards = new List<Card>();
 
             var baseQuery = @"
                 SELECT Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo FROM Cards";
-            
+
             var whereClause = "";
             var orderByClause = "";
             var parameters = new Dictionary<string, object>();
 
-            // Cláusula where para filtraje
+            // Cl├íusula where para filtraje
             if (!string.IsNullOrWhiteSpace(filterField) && !string.IsNullOrWhiteSpace(filterValue))
             {
                 if (ValidFields.Contains(filterField))
@@ -64,7 +64,7 @@ namespace swuApi.Repositories
                 }
             }
 
-            // También construir la cláusula ORDER BY
+            // Tambi├®n construir la cl├íusula ORDER BY
             if (!string.IsNullOrWhiteSpace(sortField))
             {
                 if (ValidFields.Contains(sortField))
@@ -113,7 +113,7 @@ namespace swuApi.Repositories
 
                 string query = @"
                     SELECT Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo FROM Cards";
-                
+
                 using (var command = new SqlCommand(query, connection))
                 using (var reader = await command.ExecuteReaderAsync())
                 {
@@ -136,7 +136,7 @@ namespace swuApi.Repositories
 
                 string query = @"
                     SELECT Id, CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo FROM Cards WHERE Id = @Id";
-                
+
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);
@@ -180,13 +180,13 @@ namespace swuApi.Repositories
             using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
 
-            string query = @"INSERT INTO Cards 
-                             (CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo) 
+            string query = @"INSERT INTO Cards
+                             (CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo)
                              VALUES (@CardName, @Subtitle, @Model, @Aspect, @Rarity, @CardNumber, @CollectionId, @Price, @DateAcquired, @IsPromo);
                              SELECT SCOPE_IDENTITY();";
-            
+
             using var command = new SqlCommand(query, connection);
-            
+
             command.Parameters.AddWithValue("@CardName", card.CardName);
             command.Parameters.AddWithValue("@Subtitle", card.Subtitle ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@Model", card.Model.ToString());
@@ -213,9 +213,9 @@ namespace swuApi.Repositories
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                
+
                 string query = @"UPDATE Cards SET CardName=@CardName, Subtitle=@Subtitle, Model=@Model, Aspect=@Aspect, Rarity=@Rarity, CardNumber=@CardNumber, CollectionId=@CollectionId, Price=@Price, DateAcquired=@DateAcquired, IsPromo=@IsPromo WHERE Id=@Id";
-                
+
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", card.Id);
