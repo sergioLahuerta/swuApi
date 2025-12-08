@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>Star Wars Unlimited - Gestor de Cartas</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../CSS/style.css">
-    <script src="../JS/apiCallsColecciones.js" defer></script>
-    <script src="../JS/apiCallsCartas.js" defer></script>
-    <script src="../JS/buttonsOptions.js" defer></script>
+    <link rel="stylesheet" href="./CSS/style.css">
+    <script src="./JS/apiCallsColecciones.js" defer></script>
+    <script src="./JS/apiCallsCartas.js" defer></script>
+    <script src="./JS/buttonsOptions.js" defer></script>
 </head>
 <body class="bg-dark text-light">
     <div class="container my-4">
@@ -33,13 +33,13 @@
                 <div id="crearColeccion" class="form-container">
                     <form id="crearColeccionForm" style="height: fit-content; margin-top: 5rem;">
                         <div class="mb-2">
-                            <input type="text" class="form-control" name="nombre" placeholder="Nombre colección" required>
+                            <input type="text" class="form-control" name="collectionName" placeholder="Nombre colección" required>
                         </div>
                         <div class="mb-2">
                             <input type="text" class="form-control" name="color" placeholder="Color hex(#)" required>
                         </div>
                         <div class="mb-2">
-                            <input type="number" class="form-control" name="numCartas" placeholder="Número de cartas" required>
+                            <input type="number" class="form-control" name="numCards" placeholder="Número de cartas" required>
                         </div>
                         <button type="submit" class="btn btn-primary create">Crear Colección</button>
                         <div id="coleccionMsgCrear" class="mt-2"></div>

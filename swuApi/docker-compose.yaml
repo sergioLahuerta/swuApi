@@ -1,0 +1,23 @@
+services:
+  api:
+    image: sergiolala/swuapi-sv:1.0.0
+    ports:
+      - "8309:8080"
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+    environment:
+      - ConnectionStrings__SWUPersonalApi=Server=${DB_HOST},1433;Database=${DB_NAME};User Id=${DB_USER};Password=${DB_PASSWORD};TrustServerCertificate=True;
+      - ASPNETCORE_ENVIRONMENT=Development
+      
+  db:
+    image: sergiolala/swuapi-db:1.0.0
+    env_file:
+    - ./.env
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "9038:1433"
+    entrypoint: ["/scripts/entrypoint.sh"]
