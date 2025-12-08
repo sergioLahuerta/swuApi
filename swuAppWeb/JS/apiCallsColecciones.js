@@ -10,7 +10,7 @@ async function getColeccionById(id) {
 }
 
 // Crear Colección
-document.getElementById('crearColeccionForm').onsubmit = async function(e) {
+document.getElementById('crearColeccionForm').onsubmit = async function (e) {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(this));
     data.numCards = parseInt(data.numCards, 10);
@@ -20,7 +20,7 @@ document.getElementById('crearColeccionForm').onsubmit = async function(e) {
     try {
         const res = await fetch(API_COLECCION, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
 
@@ -69,58 +69,68 @@ function colorFondoCard(color, percent) {
 
 // Obtener colección con cartas por Id
 async function mostrarColeccionConCartas(id) {
-    const res = await fetch(`${API_COLECCION}/${id}`);
-    if (!res.ok) {
+    // Obtener colección
+    const resColeccion = await fetch(`${API_COLECCION}/${id}`);
+    if (!resColeccion.ok) {
         alert('Error cargando colección');
         return;
     }
-    const collection = await res.json();
+    const collection = await resColeccion.json();
     const color = collection.color;
 
-    // Mostrar las cartas
-    const cartasContainer = document.getElementById('cartasColeccion');
-    cartasContainer.innerHTML = `<h3 style= 'width: fit-content; background: linear-gradient(120deg,#cfffdf,#274eb7,#b7c7fc 75%); background-size: 400% 400%; animation: holo 8s ease infinite; color: ${color}; font-weight: 900; padding: 18px 44px; border-radius: 13px; box-shadow: 0 4px 18px rgba(60,80,130,.22); font-size: 2.1rem; border: 2px solid #b0e4ff; @keyframes holo { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%'>Cartas de la colección:</h3>`;
+    // Obtener cartas de esa colección
+    const resCartas = await fetch(`${API_CARTA}?filterField=CollectionId&filterValue=${id}`);
+    const cards = resCartas.ok ? await resCartas.json() : [];
 
-    if (collection.cards && collection.cards.length > 0) {
+    const cartasContainer = document.getElementById('cartasColeccion');
+    cartasContainer.innerHTML = `<h3 style="width: fit-content; background: linear-gradient(120deg,#cfffdf,#274eb7,#b7c7fc 75%); background-size: 400% 400%; animation: holo 8s ease infinite; color: ${color}; font-weight: 900; padding: 18px 44px; border-radius: 13px; box-shadow: 0 4px 18px rgba(60,80,130,.22); font-size: 2.1rem; border: 2px solid #b0e4ff;">Cartas de la colección:</h3>`;
+
+    if (cards.length > 0) {
         const divContenedor = document.createElement('div');
         divContenedor.className = 'cartas-contenedor';
         divContenedor.style.cssText = `width: fit-content; display: flex; gap: 10px; padding: 15px; border-radius: 15px;`;
-        collection.cards.forEach(c => {
-        const div = document.createElement('div');
-        div.className = 'carta-item';
-        const colorDark = colorFondoCard(color, -55);
-        div.style.background = `linear-gradient(180deg, ${color} 80%, ${colorDark} 100%)`;
-        
-        if(c.model === 'Foil') {
-            div.style.filter = 'brightness(1.2)'
-        }
 
-        if(c.model === 'Hyperspace') {
-            div.style.background = `linear-gradient(180deg, #222228 80%, #222228 100%)`;
-        }
-        
-        if(c.model === 'Hyperspace Foil') {
-            div.style.background = `linear-gradient(180deg, #222228 80%, #222228 100%)`;
-            div.style.filter = 'brightness(1.2)'
-        }
-        
-        div.innerHTML = `
-        <div style='background-color: #222228; border-radius: 15px; width: -webkit-fill-available; padding: 10px;'>
-            <p style='background-color: #f0f0f0; font-weight: 800; color: ${collection.color}; margin-bottom: 10px;'>${c.collectionName}</p>
-            <p style='border-radius: 15px;'>${c.subtitle ? `<span>${c.subtitle}</span>` : ''}</p>
-        </div>
-        <div style='background-color: #222228; border-radius: 15px; width: -webkit-fill-available; padding: 10px;'>
-            <p style='background-color: #f0f0f0; color: #000000;'><span>Copias:</span> ${c.copies}</p>
-            <p>${c.model}</p>
-            <p>${c.cardNumber}/${collection.cardNumber}</p>
-        </div>
+        cards.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'carta-item';
+            const colorDark = colorFondoCard(color, -55);
+            div.style.background = `linear-gradient(180deg, ${color} 80%, ${colorDark} 100%)`;
+
+            // Ajustes de model
+            if(c.model === 'Foil') {
+                div.style.filter = 'brightness(1.2)'
+            }
+
+            if(c.model === 'Hyperspace') {
+                div.style.background = `linear-gradient(180deg, #222228 80%, #222228 100%)`;
+            }
+            
+            if(c.model === 'Hyperspace Foil') {
+                div.style.background = `linear-gradient(180deg, #222228 80%, #222228 100%)`;
+                div.style.filter = 'brightness(1.2)'
+            }
+
+            if(c.model === 'Showcase') {
+                div.style.background = `linear-gradient(180deg, #a5a5bcff 80%, #a5a5bcff 100%)`;
+                div.style.filter = 'brightness(1.2)'
+            }
+
+            div.innerHTML = `
+            <div style='background-color: #222228; border-radius: 15px; width: -webkit-fill-available; padding: 10px;'>
+                <p style='background-color: #f0f0f0; font-weight: 800; color: ${collection.color}; margin-bottom: 10px;'>${collection.collectionName}</p>
+                <p style='border-radius: 15px;'>${c.subtitle ? `<span>${c.subtitle}</span>` : ''}</p>
+            </div>
+            <div style='background-color: #222228; border-radius: 15px; width: -webkit-fill-available; padding: 10px;'>
+                <p style='background-color: #f0f0f0; color: #000000;'><span>Copias:</span> ${c.copies || 1}</p>
+                <p>${c.model}</p>
+                <p>${c.cardNumber}/${collection.numCards}</p>
+            </div>
             `;
-        divContenedor.appendChild(div);
-        cartasContainer.appendChild(divContenedor);
+
+            divContenedor.appendChild(div);
         });
 
-        console.log(cards);
-
+        cartasContainer.appendChild(divContenedor);
     } else {
         cartasContainer.innerHTML += '<p>No hay cartas en esta colección.</p>';
     }
@@ -132,13 +142,13 @@ async function mostrarColecciones() {
     const resultadosColecciones = document.getElementById('listaColecciones');
     const msgElementos = document.getElementById('coleccionMsgAll');
     msgElementos.style.display = 'none';
-    
+
     try {
         const res = await fetch(API_COLECCION);
         if (!res.ok) throw new Error('Error al obtener colecciones');
         const collection = await res.json();
         resultadosColecciones.innerHTML = '';
-        
+
         if (collection.length === 0) {
             msgElementos.style.backgroundColor = '#b33939';
             msgElementos.style.borderColor = '#b33939';
@@ -146,7 +156,7 @@ async function mostrarColecciones() {
             msgElementos.style.display = 'block';
             return;
         }
-        
+
         collection.forEach(c => {
             const btnCard = document.createElement('button');
             btnCard.type = 'button';
@@ -169,12 +179,12 @@ async function mostrarColecciones() {
         msgElementos.innerText = 'Error obteniendo colecciones';
         msgElementos.style.display = 'block';
         console.error('Error obteniendo colecciones:', err);
-    }    
+    }
 }
 // LLamada a la función en buttonsOption.js
 
 // Actualizar Colección
-document.getElementById('actualizarColeccionForm').onsubmit = async function(e) {
+document.getElementById('actualizarColeccionForm').onsubmit = async function (e) {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(this));
     const msgElementoActualizar = document.getElementById('coleccionMsgActualizar');
@@ -211,7 +221,7 @@ document.getElementById('actualizarColeccionForm').onsubmit = async function(e) 
 };
 
 // Eliminar Colección
-document.getElementById('borrarColeccionForm').onsubmit = async function(e) {
+document.getElementById('borrarColeccionForm').onsubmit = async function (e) {
     e.preventDefault();
     const id = new FormData(this).get('id');
     const msgElementoBorrar = document.getElementById('coleccionMsgBorrar');
@@ -225,7 +235,7 @@ document.getElementById('borrarColeccionForm').onsubmit = async function(e) {
         this.reset();
         return;
     }
-    
+
     try {
         const res = await fetch(`${API_COLECCION}/${id}`, { method: 'DELETE' });
         if (res.ok) {
