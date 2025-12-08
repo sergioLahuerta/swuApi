@@ -138,24 +138,27 @@ async function mostrarColecciones() {
         if (!res.ok) throw new Error('Error al obtener colecciones');
         const collection = await res.json();
         resultadosColecciones.innerHTML = '';
-
+        
         if (collection.length === 0) {
-        msgElementos.style.backgroundColor = '#b33939';
-        msgElementos.style.borderColor = '#b33939';
-        msgElementos.innerText = 'No hay colecciones disponibles';
-        msgElementos.style.display = 'block';
-        return;
+            msgElementos.style.backgroundColor = '#b33939';
+            msgElementos.style.borderColor = '#b33939';
+            msgElementos.innerText = 'No hay colecciones disponibles';
+            msgElementos.style.display = 'block';
+            return;
         }
-
+        
         collection.forEach(c => {
             const btnCard = document.createElement('button');
             btnCard.type = 'button';
             btnCard.className = 'coleccion-item';
             btnCard.style.backgroundColor = c.color
-            btnCard.innerHTML = `<h3 style= 'font-weight: 700;'>${c.collectionName}, ${c.color}</h3><p style='color: white;'>Número de cartas: ${c.numCards}</p>`;
+            btnCard.innerHTML = `<h3 style= 'font-weight: 700;'>${c.collectionName}</h3>
+            <h3 style= 'font-weight: 700;'>${c.color}</h3>
+            <p style='color: white;'>Número de cartas: ${c.numCards}</p>`;
             btnCard.addEventListener('click', () => {
                 mostrarColeccionConCartas(c.id);
             });
+            resultadosColecciones.style.display = 'flex';
             resultadosColecciones.appendChild(btnCard);
         });
 
@@ -181,8 +184,6 @@ document.getElementById('actualizarColeccionForm').onsubmit = async function(e) 
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                idActual: parseInt(data.idActual, 10),
-                nuevoId: parseInt(data.nuevoId, 10),
                 CollectionName: data.collectionName,
                 color: data.color,
                 CardNumber: parseInt(data.numCards, 10)
