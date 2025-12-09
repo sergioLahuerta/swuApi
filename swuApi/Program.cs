@@ -41,6 +41,9 @@ builder.Services.AddScoped<IUserRepository, UserRepository>(provider =>
 builder.Services.AddScoped<IUserCardRepository, UserCardRepository>(provider =>
     new UserCardRepository(connectionString!));
 
+builder.Services.AddScoped<IRepository<Review>, ReviewRepository>(provider =>
+    new ReviewRepository(connectionString!));
+
 // Dependencias Services
 builder.Services.AddScoped<IService<Card>, CardService>();
 builder.Services.AddScoped<IService<Collection>, CollectionService>();
@@ -48,6 +51,7 @@ builder.Services.AddScoped<IService<Pack>, PackService>();
 builder.Services.AddScoped<IPackOpeningService, PackOpeningService>();
 builder.Services.AddScoped<IService<User>, UserService>();
 builder.Services.AddScoped<IUserCardService, UserCardService>();
+builder.Services.AddScoped<IService<Review>, ReviewService>();
 
 
 // Otros servicios del Framework
