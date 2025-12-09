@@ -1,7 +1,9 @@
 SWU Api README.md || Pasos a seguir: en GitBash
 # Dentro del repositorio: En la carpeta swuApi: por GitBash
 cd swuApi
-# Ejecutamos script setup.sh para crear el .env
+# Damos permiso y ejecutamos el script setup.sh para crear el .env
+chmod +x ./scripts/setup.sh
+
 ./scripts/setup.sh
 
 code .
