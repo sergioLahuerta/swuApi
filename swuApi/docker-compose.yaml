@@ -2,7 +2,7 @@ services:
   api:
     image: sergiolala/swuapi-sv:1.0.0
     ports:
-      - "8309:8080"
+      - "8409:8080"
     depends_on:
       - db
     env_file:
@@ -19,5 +19,5 @@ services:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=${DB_PASSWORD}
     ports:
-      - "9038:1433"
+      - "8509:1433"
     entrypoint: ["/scripts/entrypoint.sh"]

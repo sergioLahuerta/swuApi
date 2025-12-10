@@ -280,5 +280,10 @@ namespace swuApi.Repositories
                 }
             }
         }
+
+        public Task<List<Card>> GetAllReviewsInUserAsync(int userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

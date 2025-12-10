@@ -10,6 +10,7 @@ FROM sys.databases
 WHERE name = 'swuDB';
 
 /* Función Helper para eliminar tablas en orden si existen, respetando las FK */
+IF OBJECT_ID('swuDB.dbo.Reviews', 'U') IS NOT NULL DROP TABLE Reviews;
 IF OBJECT_ID('swuDB.dbo.UserCards', 'U') IS NOT NULL DROP TABLE UserCards;
 IF OBJECT_ID('swuDB.dbo.Cards', 'U') IS NOT NULL DROP TABLE Cards;
 IF OBJECT_ID('swuDB.dbo.Packs', 'U') IS NOT NULL DROP TABLE Packs;
@@ -37,7 +38,7 @@ SELECT * FROM Collections;
 /*------------- Usuarios -------------*/
 CREATE TABLE Users (
     Id INT IDENTITY(1,1) PRIMARY KEY,
-    Username NVARCHAR(50) NOT NULL UNIQUE, 
+    Username NVARCHAR(50) NOT NULL UNIQUE,
     Email NVARCHAR(100) NOT NULL UNIQUE,  
     PasswordHash NVARCHAR(256) NOT NULL, 
     RegistrationDate DATETIME NOT NULL,
@@ -142,3 +143,21 @@ INSERT INTO UserCards (UserId, CardId, Copies, DateAdded)
 VALUES (1, 3, 5, GETDATE());
 
 SELECT * FROM UserCards;
+
+/*------------- Reviews -------------*/
+CREATE TABLE Reviews (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    CreationDate DATETIME NOT NULL,
+    MessageReview NVARCHAR(100) NULL,
+    Stars INT NOT NULL DEFAULT 5,
+    UserId INT NOT NULL,
+    FOREIGN KEY (UserId) REFERENCES Users(Id)
+);
+
+INSERT INTO Reviews (CreationDate, MessageReview, Stars, UserId)
+VALUES
+(GETDATE(), 'Buena carta, mucho ataque y compensada blaaaa', 5, 1),
+(GETDATE(), 'Carta pochilla, ataque flojo y defensa mejorable', 2, 2),
+(GETDATE(), 'Carta pésima, ni la toquen', 1, 1);
+
+SELECT * FROM Reviews;
