@@ -149,15 +149,15 @@ CREATE TABLE Reviews (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     CreationDate DATETIME NOT NULL,
     MessageReview NVARCHAR(100) NULL,
-    Stars INT NOT NULL DEFAULT 5,
+    Stars DECIMAL NOT NULL CHECK (Stars > 1 AND Stars < 5),
     UserId INT NOT NULL,
     FOREIGN KEY (UserId) REFERENCES Users(Id)
 );
 
 INSERT INTO Reviews (CreationDate, MessageReview, Stars, UserId)
 VALUES
-(GETDATE(), 'Buena carta, mucho ataque y compensada blaaaa', 5, 1),
-(GETDATE(), 'Carta pochilla, ataque flojo y defensa mejorable', 2, 2),
-(GETDATE(), 'Carta pésima, ni la toquen', 1, 1);
+(GETDATE(), 'Buena carta, mucho ataque y compensada blaaaa', 5.0, 1),
+(GETDATE(), 'Carta pochilla, ataque flojo y defensa mejorable', 2.5, 2),
+(GETDATE(), 'Carta pésima, ni la toquen', 1.0, 1);
 
 SELECT * FROM Reviews;
