@@ -9,7 +9,7 @@
 
 *.env
 .env
-.vscode
+*.vscode/
 
 # Build results
 [Dd]ebug/
