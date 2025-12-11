@@ -22,3 +22,8 @@ services:
     ports:
       - "9038:1433"
     entrypoint: ["/scripts/entrypoint.sh"]
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+  volumes:
+  mssql_data:
