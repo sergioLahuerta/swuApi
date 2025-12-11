@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using swuApi.Models;
-using swuApi.DTOs   ;
 using swuApi.Services;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using swuApi.CardDTOs;
 
 namespace swuApi.Controllers
 {
@@ -28,6 +26,8 @@ namespace swuApi.Controllers
             [FromQuery] string? sortDirection)
         {
             var cards = await _cardService.GetFilteredAsync(filterField, filterValue, sortField, sortDirection);
+
+            // Devuelve directamente el modelo Card (sin mapear a DTO)
             return Ok(cards);
         }
 
@@ -36,14 +36,30 @@ namespace swuApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Card>> Get(int id)
+        public async Task<ActionResult<CardGetByIdDTO>> Get(int id)
         {
             try
             {
                 var card = await _cardService.GetByIdAsync(id);
                 if (card == null)
                     return NotFound();
-                return Ok(card);
+
+                var dto = new CardGetByIdDTO
+                {
+                    Id = card.Id,
+                    CardName = card.CardName,
+                    Subtitle = card.Subtitle,
+                    Model = card.Model,
+                    Aspect = card.Aspect,
+                    Rarity = card.Rarity,
+                    CardNumber = card.CardNumber,
+                    Price = card.Price,
+                    DateAcquired = card.DateAcquired,
+                    IsPromo = card.IsPromo,
+                    CollectionId = card.CollectionId
+                };
+
+                return Ok(dto);
             }
             catch (ArgumentException ex)
             {
@@ -89,16 +105,28 @@ namespace swuApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(int id, [FromBody] Card card)
+        public async Task<IActionResult> Put(int id, [FromBody] CardUpdateDTO cardUpdateDTO) 
         {
-            if (id != card.Id)
+            // 1. Mapeo del DTO al modelo de dominio (Card)
+            var cardToUpdate = new Card 
             {
-                return BadRequest("El ID de la ruta no coincide con el ID del cuerpo.");
-            }
+                Id = id,
+                CardName = cardUpdateDTO.CardName,
+                Subtitle = cardUpdateDTO.Subtitle,
+                Model = cardUpdateDTO.Model,
+                Aspect = cardUpdateDTO.Aspect,
+                Rarity = cardUpdateDTO.Rarity,
+                CardNumber = cardUpdateDTO.CardNumber,
+                Price = cardUpdateDTO.Price,
+                DateAcquired = cardUpdateDTO.DateAcquired,
+                IsPromo = cardUpdateDTO.IsPromo,
+                CollectionId = cardUpdateDTO.CollectionId
+            };
 
+            // 2. Ejecutar la lógica de servicio
             try
             {
-                await _cardService.UpdateAsync(card);
+                await _cardService.UpdateAsync(cardToUpdate);
                 return NoContent();
             }
             catch (ArgumentException ex)

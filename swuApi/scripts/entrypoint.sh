@@ -3,10 +3,8 @@
 set -x
 set -e
 
-# Define la ruta correcta de sqlcmd (adaptada a la versión 2019/2022)
 SQLCMD=/opt/mssql-tools/bin/sqlcmd
 
-# Inicia SQL Server en segundo plano
 /opt/mssql/bin/sqlservr &
 
 # Espera a que SQL Server esté listo
@@ -36,5 +34,5 @@ else
     echo "REINICIO: Datos de DB ya existentes en el volumen. Omitiendo scripts de inicialización."
 fi
 
-# Mantén SQL Server en primer plano
+# Mantiene SQL Server en primer plano
 wait

@@ -10,6 +10,7 @@ FROM sys.databases
 WHERE name = 'swuDB';
 
 /* Función Helper para eliminar tablas en orden si existen, respetando las FK */
+IF OBJECT_ID('swuDB.dbo.Reviews', 'U') IS NOT NULL DROP TABLE Reviews;
 IF OBJECT_ID('swuDB.dbo.UserCards', 'U') IS NOT NULL DROP TABLE UserCards;
 IF OBJECT_ID('swuDB.dbo.Cards', 'U') IS NOT NULL DROP TABLE Cards;
 IF OBJECT_ID('swuDB.dbo.Packs', 'U') IS NOT NULL DROP TABLE Packs;
@@ -30,7 +31,7 @@ CREATE TABLE Collections (
 /*------------- Usuarios -------------*/
 CREATE TABLE Users (
     Id INT IDENTITY(1,1) PRIMARY KEY,
-    Username NVARCHAR(50) NOT NULL UNIQUE, 
+    Username NVARCHAR(50) NOT NULL UNIQUE,
     Email NVARCHAR(100) NOT NULL UNIQUE,  
     PasswordHash NVARCHAR(256) NOT NULL, 
     RegistrationDate DATETIME NOT NULL,

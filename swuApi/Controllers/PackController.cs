@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using swuApi.Models;
-using swuApi.DTOs;
+using swuApi.PackDTOs;
 using swuApi.Services;
 
 namespace swuApi.Controllers
@@ -16,22 +16,38 @@ namespace swuApi.Controllers
             _packService = packService;
         }
 
+        // GET ALL
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Pack>>> Get(
+        public async Task<ActionResult<IEnumerable<PackGetAllDTO>>> Get(
             [FromQuery] string? filterField,
             [FromQuery] string? filterValue,
             [FromQuery] string? sortField,
             [FromQuery] string? sortDirection)
         {
             var packs = await _packService.GetFilteredAsync(filterField, filterValue, sortField, sortDirection);
-            return Ok(packs);
+
+            // Mapeo hacia DTOs
+            var result = packs.Select(p => new PackGetAllDTO
+            {
+                Id = p.Id,
+                PackName = p.PackName,
+                NumberOfCards = p.NumberOfCards,
+                ShowcaseRarityOdds = p.ShowcaseRarityOdds,
+                GuaranteesRare = p.GuaranteesRare,
+                Price = p.Price,
+                ReleaseDate = p.ReleaseDate,
+                CollectionId = p.CollectionId
+            });
+
+            return Ok(result);
         }
 
+        // GET BY ID
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Pack>> Get(int id)
+        public async Task<ActionResult<PackGetAllDTO>> Get(int id)
         {
             try
             {
@@ -39,7 +55,19 @@ namespace swuApi.Controllers
                 if (pack == null)
                     return NotFound();
 
-                return Ok(pack);
+                var dto = new PackGetAllDTO
+                {
+                    Id = pack.Id,
+                    PackName = pack.PackName,
+                    NumberOfCards = pack.NumberOfCards,
+                    ShowcaseRarityOdds = pack.ShowcaseRarityOdds,
+                    GuaranteesRare = pack.GuaranteesRare,
+                    Price = pack.Price,
+                    ReleaseDate = pack.ReleaseDate,
+                    CollectionId = pack.CollectionId
+                };
+
+                return Ok(dto);
             }
             catch (ArgumentException ex)
             {
@@ -47,20 +75,23 @@ namespace swuApi.Controllers
             }
         }
 
+        // ============================================================
+        // POST
+        // ============================================================
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] PackCreationDTO packDTO)
+        public async Task<IActionResult> Post([FromBody] PackCreationDTO dto)
         {
             var pack = new Pack
             {
-                PackName = packDTO.PackName,
-                NumberOfCards = packDTO.NumberOfCards,
-                ShowcaseRarityOdds = packDTO.ShowcaseRarityOdds,
-                GuaranteesRare = packDTO.GuaranteesRare,
-                Price = packDTO.Price,
-                ReleaseDate = packDTO.ReleaseDate == default ? DateTime.UtcNow : packDTO.ReleaseDate,
-                CollectionId = packDTO.CollectionId
+                PackName = dto.PackName,
+                NumberOfCards = dto.NumberOfCards,
+                ShowcaseRarityOdds = dto.ShowcaseRarityOdds,
+                GuaranteesRare = dto.GuaranteesRare,
+                Price = dto.Price,
+                ReleaseDate = dto.ReleaseDate,
+                CollectionId = dto.CollectionId
             };
 
             try
@@ -75,35 +106,44 @@ namespace swuApi.Controllers
             }
         }
 
+        // ============================================================
+        // PUT
+        // ============================================================
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(int id, [FromBody] Pack pack)
+        public async Task<IActionResult> Put(int id, [FromBody] PackUpdateDTO dto)
         {
-            if (id != pack.Id)
-            {
-                return BadRequest("El ID de la ruta no coincide con el ID del cuerpo.");
-            }
+            var existing = await _packService.GetByIdAsync(id);
+            if (existing == null)
+                return NotFound();
+
+            // Mapeo
+            existing.PackName = dto.PackName;
+            existing.NumberOfCards = dto.NumberOfCards;
+            existing.ShowcaseRarityOdds = dto.ShowcaseRarityOdds;
+            existing.GuaranteesRare = dto.GuaranteesRare;
+            existing.Price = dto.Price;
+            existing.ReleaseDate = dto.ReleaseDate;
+            existing.CollectionId = dto.CollectionId;
 
             try
             {
-                await _packService.UpdateAsync(pack);
+                await _packService.UpdateAsync(existing);
                 return NoContent();
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
         }
 
+        // ============================================================
+        // DELETE
+        // ============================================================
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
@@ -112,13 +152,13 @@ namespace swuApi.Controllers
                 await _packService.DeleteAsync(id);
                 return NoContent();
             }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
             catch (KeyNotFoundException)
             {
                 return NotFound();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

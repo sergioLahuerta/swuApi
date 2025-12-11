@@ -11,17 +11,14 @@ public class PackOpeningController : ControllerBase
         _packOpeningService = packOpeningService;
     }
 
-    // En Controllers/PackOpeningController.cs
 
-    [HttpPost("open/{packId}")] // Ejemplo de ruta: POST /api/PackOpening/open/1
+    [HttpPost("open/{packId}")]
     public async Task<IActionResult> OpenPack(int packId)
     {
         try
         {
-            // 🚨 Llamas al método de tu servicio
             var generatedCards = await _packOpeningService.OpenPackAsync(packId);
 
-            // Retornas el resultado al cliente
             return Ok(generatedCards);
         }
         catch (KeyNotFoundException ex)

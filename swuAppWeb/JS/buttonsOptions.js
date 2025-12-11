@@ -1,3 +1,42 @@
+// GENERAL
+// GENERAL
+// GENERAL
+
+document.getElementById('volverAtrasColecciones').addEventListener('click', () => {
+    location.reload();
+});
+
+document.getElementById('volverAtrasCartas').addEventListener('click', () => {
+    location.reload();
+});
+
+document.getElementById('volverAtrasSobres').addEventListener('click', () => {
+    location.reload();
+});
+
+//SOBRESSS
+//SOBRESSS
+//SOBRESSS
+function mostrarOpcionAbrirSobre() {
+    const botonSobres = document.getElementById('sobres-buttonHome')
+    botonSobres.addEventListener('click', () => {
+        const seccionAbrirSobre = document.getElementById('abrirPacksContainer')
+        seccionAbrirSobre.style.display = 'flex'
+        seccionAbrirSobre.style.flexDirection = 'column'
+        const body = document.getElementsByTagName('body')
+        body[0].style.backgroundImage = "url('./src/backgroundImageAbrirSobres2.jpg')"
+        
+        botonSobres.style.display = 'none'
+        
+        const botonCartas = document.getElementById('cartas-buttonHome')
+        botonCartas.style.display = 'none'
+
+        const botonColecciones = document.getElementById('colecciones-buttonHome')
+        botonColecciones.style.display = 'none'
+    })
+}
+mostrarOpcionAbrirSobre();
+
 // COLECCIONES
 // COLECCIONES
 // COLECCIONES
@@ -7,13 +46,15 @@ function mostrarOpcionesColeccion() {
         const seccionColecciones = document.getElementById('colecciones')
         seccionColecciones.style.display = 'flex'
         const body = document.getElementsByTagName('body')
-        body[0].style.backgroundImage = "url('../src/backgroundColecciones.png')"
+        body[0].style.backgroundImage = "url('./src/backgroundColecciones.png')"
         
-        const botonColecciones = document.getElementById('colecciones-buttonHome')
         botonColecciones.style.display = 'none'
         
         const botonCartas = document.getElementById('cartas-buttonHome')
         botonCartas.style.display = 'none'
+
+        const botonSobres = document.getElementById('sobres-buttonHome')
+        botonSobres.style.display = 'none';
     })
 }
 mostrarOpcionesColeccion();
@@ -166,13 +207,16 @@ function visibleSeccionartas() {
         seccionCartas.style.display = 'flex'
         seccionCartas.style.flexDirection = 'row'
         const body = document.getElementsByTagName('body')
-        body[0].style.backgroundImage = "url('../src/backgroundCartas.jpg')"
+        body[0].style.backgroundImage = "url('./src/backgroundCartas.jpg')"
         
         const botonCartas = document.getElementById('cartas-buttonHome')
         botonCartas.style.display = 'none'
         
         const botonColecciones = document.getElementById('colecciones-buttonHome')
         botonColecciones.style.display = 'none'
+
+        const botonSobres = document.getElementById('sobres-buttonHome')
+        botonSobres.style.display = 'none';
     })
 }
 visibleSeccionartas();
