@@ -1,3 +1,4 @@
+using swuApi.Enums;
 using swuApi.Models;
 using swuApi.Repositories;
 
@@ -39,10 +40,10 @@ namespace swuApi.Services
                 throw new ArgumentException("El mensaje de la reseña no puede estar vacío.", nameof(review.MessageReview));
 
             // Validación estrellas de una una reseña
-            int reviewValue = (int)review.Stars;
+            double reviewValue = StarsToDouble.ValueToDouble(review.Stars);
             
             // Validación precio, si es negativo se lanza la excepción
-            if (reviewValue < 0 | reviewValue > 5)
+            if (reviewValue < 0 || reviewValue > 5)
             {
                 throw new ArgumentException("Las estrellas permitidas en la reseña van de 1 a 5 ambos inclusive.", nameof(reviewValue));
             }
@@ -71,9 +72,9 @@ namespace swuApi.Services
                 throw new ArgumentException("El nombre del review no puede estar vacío.", nameof(review.MessageReview));
             
             // Validación precio, si es negativo se lanza la excepción
-            int reviewValue = (int)review.Stars;
-            if (reviewValue < 0 | reviewValue > 5)
-                throw new ArgumentException("Las estrellas permitidas en la reseña van de 1 a 5 ambos inclusive.", nameof(reviewValue));
+            double reviewValue = StarsToDouble.ValueToDouble(review.Stars);
+            if (reviewValue < 0 || reviewValue > 5)
+                throw new ArgumentException("Las estrellas permitidas en la reseña van de 1 a 5 y .", nameof(reviewValue));
             
             // Validación de fecha, si es un a fecha futura, lanzar excepción
             if (review.CreationDate > DateTime.Now)
