@@ -61,6 +61,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseDefaultFiles();
 app.UseStaticFiles();
 
 if (app.Environment.IsDevelopment())
@@ -69,7 +70,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyAPI");
-        c.RoutePrefix = "docs";
         c.InjectStylesheet("/swagger/SwaggerDark.css");
     });
 }
