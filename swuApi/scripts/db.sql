@@ -27,13 +27,6 @@ CREATE TABLE Collections (
     IsComplete BIT NOT NULL DEFAULT 0
 );
 
-INSERT INTO Collections (CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete)
-VALUES
-('Spark of Rebellion', '#e10600', 252, 500.00, GETDATE(), 0),
-('Shadows of the Galaxy', '#3b3fb6', 250, 750.50, GETDATE(), 0);
-
-SELECT * FROM Collections;
-
 /*------------- Usuarios -------------*/
 CREATE TABLE Users (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -44,13 +37,6 @@ CREATE TABLE Users (
     IsActive BIT NOT NULL DEFAULT 1,
     TotalCollectionValue DECIMAL(10, 2) NOT NULL CHECK (TotalCollectionValue >= 0) DEFAULT 0
 );
-
-INSERT INTO Users (Username, Email, PasswordHash, RegistrationDate, IsActive, TotalCollectionValue)
-VALUES
-('HanShotFirst', 'han@falcon.com', 'hashed_pwd_123', GETDATE(), 1, 550.75),
-('LukeJedi', 'luke@jedi.net', 'hashed_pwd_456', GETDATE(), 1, 1200.00);
-
-SELECT * FROM Users;
 
 /*------------- Sobres -------------*/
 CREATE TABLE Packs (
@@ -64,13 +50,6 @@ CREATE TABLE Packs (
     CollectionId INT NOT NULL,
     FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
 );
-
-INSERT INTO Packs (PackName, NumberOfCards, ShowcaseRarityOdds, Price, ReleaseDate, CollectionId)
-VALUES
-('Booster Pack SoR', 16, 288, 4.99, GETDATE(), 1),
-('Booster Pack SoG', 16, 288, 4.99, GETDATE(), 2);
-
-SELECT * FROM Packs;
 
 /*------------- Cartas -------------*/
 CREATE TABLE Cards (
@@ -88,15 +67,6 @@ CREATE TABLE Cards (
     FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
 );
 
-INSERT INTO Cards (CardName, Subtitle, Model, Aspect, Rarity, CardNumber, CollectionId, Price, DateAcquired, IsPromo)
-VALUES
-('Luke Skywalker', 'Jedi Knight', 'Foil', 'Vigilance', 'Uncommon', 5, 1, 15.00, GETDATE(), 0),
-('Darth Vader', 'Dark Lord', 'Standard', 'Command', 'Common', 1, 1, 30.50, GETDATE(), 0),
-('Fighter Wing', NULL, 'Showcase', 'Aggression', 'Rare', 150, 2, 5.00, GETDATE(), 0),
-('Moff Gideon', 'Imperial Commander', 'Hyperspace', 'Command', 'Legendary', 10, 2, 20.00, GETDATE(), 1);
-
-SELECT * FROM Cards;
-
 /*------------- Inventario Personal -------------*/
 CREATE TABLE UserCards (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -111,14 +81,3 @@ CREATE TABLE UserCards (
     FOREIGN KEY (UserId) REFERENCES Users(Id),
     FOREIGN KEY (CardId) REFERENCES Cards(Id)
 );
-
-INSERT INTO UserCards (UserId, CardId, Copies, DateAdded)
-VALUES (1, 1, 2, GETDATE());
-
-INSERT INTO UserCards (UserId, CardId, Copies, DateAdded)
-VALUES (2, 2, 1, GETDATE());
-
-INSERT INTO UserCards (UserId, CardId, Copies, DateAdded)
-VALUES (1, 3, 5, GETDATE());
-
-SELECT * FROM UserCards;
