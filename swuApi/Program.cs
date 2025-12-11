@@ -61,26 +61,21 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseStaticFiles();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseStaticFiles();
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyAPI");
+        c.RoutePrefix = "docs";
         c.InjectStylesheet("/swagger/SwaggerDark.css");
     });
 }
 
 app.UseCors();
 app.UseAuthorization();
-
-app.MapGet("/", context =>
-{
-    context.Response.Redirect("/swagger");
-    return Task.CompletedTask;
-});
 
 app.MapControllers();
 app.Run();
