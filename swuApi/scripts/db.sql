@@ -25,7 +25,8 @@ CREATE TABLE Collections (
     NumCards INT NOT NULL DEFAULT 0,
     EstimatedValue DECIMAL(10, 2) NOT NULL CHECK (EstimatedValue >= 0),
     CreationDate DATETIME NOT NULL,
-    IsComplete BIT NOT NULL DEFAULT 0
+    IsComplete BIT NOT NULL DEFAULT 0,
+    ImageCollection NVARCHAR(100) NOT NULL
 );
 
 /*------------- Usuarios -------------*/
@@ -49,6 +50,7 @@ CREATE TABLE Packs (
     Price DECIMAL(10, 2) NOT NULL CHECK (Price >= 0),
     ReleaseDate DATETIME NOT NULL,
     CollectionId INT NOT NULL,
+    ImagePack NVARCHAR(100) NOT NULL,
     FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
 );
 
@@ -65,6 +67,7 @@ CREATE TABLE Cards (
     Price DECIMAL(10, 2) NOT NULL CHECK (Price >= 0),
     DateAcquired DATETIME NOT NULL,
     IsPromo BIT NOT NULL DEFAULT 0,
+    ImageCard NVARCHAR(100) NOT NULL,
     FOREIGN KEY (CollectionId) REFERENCES Collections(Id)
 );
 
