@@ -9,7 +9,7 @@ namespace swuApi.Repositories
 
         private static readonly HashSet<string> ValidFields = new(StringComparer.OrdinalIgnoreCase)
         {
-            "CollectionName", "Color", "NumCards", "EstimatedValue", "CreationDate", "IsComplete"
+            "CollectionName", "Color", "NumCards", "EstimatedValue", "CreationDate", "IsComplete", "ImageCollection"
         };
 
         public CollectionRepository(string connectionString)
@@ -27,7 +27,8 @@ namespace swuApi.Repositories
                 NumCards = reader.GetInt32(3),
                 EstimatedValue = reader.GetDecimal(4),
                 CreationDate = reader.GetDateTime(5),
-                IsComplete = reader.GetBoolean(6)
+                IsComplete = reader.GetBoolean(6),
+                ImageCollection = reader.GetString(7)
             };
         }
 
@@ -39,7 +40,7 @@ namespace swuApi.Repositories
             await connection.OpenAsync();
 
             string query = @"
-                SELECT Id, CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete 
+                SELECT Id, CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete, ImageCollection
                 FROM Collections";
 
             using var command = new SqlCommand(query, connection);
@@ -59,7 +60,7 @@ namespace swuApi.Repositories
             await connection.OpenAsync();
 
             string query = @"
-                SELECT Id, CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete 
+                SELECT Id, CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete, ImageCollection
                 FROM Collections WHERE Id = @Id";
 
             using var command = new SqlCommand(query, connection);
@@ -83,7 +84,7 @@ namespace swuApi.Repositories
             var parameters = new Dictionary<string, object>();
 
             string baseQuery = @"
-                SELECT Id, CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete 
+                SELECT Id, CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete, ImageCollection
                 FROM Collections";
 
             if (!string.IsNullOrWhiteSpace(filterField) && !string.IsNullOrWhiteSpace(filterValue) && ValidFields.Contains(filterField))
@@ -126,8 +127,8 @@ namespace swuApi.Repositories
 
             string query = @"
                 INSERT INTO Collections 
-                (CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete) 
-                VALUES (@CollectionName, @Color, @NumCards, @EstimatedValue, @CreationDate, @IsComplete);
+                (CollectionName, Color, NumCards, EstimatedValue, CreationDate, IsComplete, ImageCollection) 
+                VALUES (@CollectionName, @Color, @NumCards, @EstimatedValue, @CreationDate, @IsComplete, @ImageCollection);
                 SELECT SCOPE_IDENTITY();"; // devuelve el Id generado
 
             using var command = new SqlCommand(query, connection);
@@ -138,6 +139,7 @@ namespace swuApi.Repositories
             command.Parameters.AddWithValue("@EstimatedValue", collection.EstimatedValue);
             command.Parameters.AddWithValue("@CreationDate", collection.CreationDate);
             command.Parameters.AddWithValue("@IsComplete", collection.IsComplete);
+            command.Parameters.AddWithValue("@ImageCollection", collection.ImageCollection);
 
             // Obtener el Id generado automáticamente y asignarlo al objeto
             var id = await command.ExecuteScalarAsync();
@@ -157,7 +159,8 @@ namespace swuApi.Repositories
                     NumCards=@NumCards, 
                     EstimatedValue=@EstimatedValue, 
                     CreationDate=@CreationDate, 
-                    IsComplete=@IsComplete
+                    IsComplete=@IsComplete,
+                    ImageCollection=@ImageCollection
                 WHERE Id=@Id";
 
             using var command = new SqlCommand(query, connection);
@@ -168,6 +171,7 @@ namespace swuApi.Repositories
             command.Parameters.AddWithValue("@EstimatedValue", collection.EstimatedValue);
             command.Parameters.AddWithValue("@CreationDate", collection.CreationDate);
             command.Parameters.AddWithValue("@IsComplete", collection.IsComplete);
+            command.Parameters.AddWithValue("@ImageCollection", collection.ImageCollection);
             command.Parameters.AddWithValue("@Id", collection.Id);
 
             await command.ExecuteNonQueryAsync();

@@ -33,7 +33,8 @@ namespace swuApi.Controllers
                 NumCards = c.NumCards,
                 EstimatedValue = c.EstimatedValue,
                 CreationDate = c.CreationDate,
-                IsComplete = c.IsComplete
+                IsComplete = c.IsComplete,
+                ImageCollection = c.ImageCollection
             });
 
             return Ok(dtoList);
@@ -60,7 +61,8 @@ namespace swuApi.Controllers
                 NumCards = collection.NumCards,
                 EstimatedValue = collection.EstimatedValue,
                 CreationDate = collection.CreationDate,
-                IsComplete = collection.IsComplete
+                IsComplete = collection.IsComplete,
+                ImageCollection = collection.ImageCollection
             };
 
             return Ok(dto);
@@ -81,7 +83,8 @@ namespace swuApi.Controllers
                 NumCards = dto.NumCards,
                 EstimatedValue = dto.EstimatedValue,
                 CreationDate = dto.CreationDate ?? DateTime.Now,
-                IsComplete = dto.IsComplete
+                IsComplete = dto.IsComplete,
+                ImageCollection = dto.ImageCollection
             };
 
             await _collectionService.AddAsync(collection);
@@ -107,6 +110,7 @@ namespace swuApi.Controllers
             existing.EstimatedValue = dto.EstimatedValue;
             existing.CreationDate = dto.CreationDate ?? existing.CreationDate;
             existing.IsComplete = dto.IsComplete;
+            existing.ImageCollection = dto.ImageCollection;
 
             await _collectionService.UpdateAsync(existing);
 

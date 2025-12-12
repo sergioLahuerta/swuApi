@@ -9,6 +9,7 @@ namespace swuApi.Models
         public decimal EstimatedValue { get; set; }
         public DateTime CreationDate { get; set; }
         public bool IsComplete { get; set; }
+        public string ImageCollection { get; set; }
         public ICollection<Card> Cards { get; set; }
 
         public Collection()

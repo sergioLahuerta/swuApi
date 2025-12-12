@@ -9,6 +9,7 @@ namespace swuApi.CollectionDTOs
         public int NumCards { get; set; }
         public decimal EstimatedValue { get; set; }
         public DateTime? CreationDate { get; set; }
+        public string ImageCollection { get; set; }
 
         [DefaultValue(false)]
         public bool IsComplete { get; set; }

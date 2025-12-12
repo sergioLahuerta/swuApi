@@ -55,6 +55,11 @@ namespace swuApi.Services
                 throw new ArgumentException("La fecha de creación no puede ser en el futuro.", nameof(collection.CreationDate));
             
             await _collectionRepository.AddAsync(collection);
+
+            if(collection.ImageCollection == null)
+            {
+                throw new ArgumentException("La colección tiene que registrarse con una imagen asociada a ella.");
+            }
         }
 
         // PUT: UpdateAsync
