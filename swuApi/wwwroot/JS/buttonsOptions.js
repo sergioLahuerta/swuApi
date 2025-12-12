@@ -25,9 +25,9 @@ function mostrarOpcionAbrirSobre() {
         seccionAbrirSobre.style.flexDirection = 'column'
         const body = document.getElementsByTagName('body')
         body[0].style.backgroundImage = "url('./src/backgroundImageAbrirSobres2.jpg')"
-        
+
         botonSobres.style.display = 'none'
-        
+
         const botonCartas = document.getElementById('cartas-buttonHome')
         botonCartas.style.display = 'none'
 
@@ -47,9 +47,9 @@ function mostrarOpcionesColeccion() {
         seccionColecciones.style.display = 'flex'
         const body = document.getElementsByTagName('body')
         body[0].style.backgroundImage = "url('./src/backgroundColecciones.png')"
-        
+
         botonColecciones.style.display = 'none'
-        
+
         const botonCartas = document.getElementById('cartas-buttonHome')
         botonCartas.style.display = 'none'
 
@@ -73,7 +73,7 @@ function crearColeccionButton() {
     const crearColeccionSeccion = document.getElementById('crearColeccion')
     const actualizarColeccionSeccion = document.getElementById('actualizarColeccion')
     const eliminarColeccionSeccion = document.getElementById('eliminarColeccion')
-    crearColeccionBoton.addEventListener('click', () =>{
+    crearColeccionBoton.addEventListener('click', () => {
         //Listas
         listaColeccionesResultados.style.display = 'none'
         cartasColeccion.style.display = 'none'
@@ -94,6 +94,7 @@ crearColeccionButton();
 
 //Funcion ver todas las colecciones
 function verTodasColeccionButton() {
+    const botonColecciones = document.getElementById('colecciones-buttonHome')
     //Listas
     const listaColeccionesResultados = document.getElementById('listaColecciones')
     const cartasColeccion = document.getElementById('cartasColeccion')
@@ -106,23 +107,27 @@ function verTodasColeccionButton() {
     const crearColeccionSeccion = document.getElementById('crearColeccion')
     const actualizarColeccionSeccion = document.getElementById('actualizarColeccion')
     const eliminarColeccionSeccion = document.getElementById('eliminarColeccion')
-    
-    verTodasColeccionBoton.addEventListener('click', () => {
-        mostrarColecciones();
-        //Listas
-        listaColeccionesResultados.style.display = 'block'
-        cartasColeccion.style.display = 'block'
-        cartasColeccion.innerHTML = ''
-        //Botones
-        verTodasColeccionBoton.style.display = 'none'
-        crearColeccionBoton.style.display = 'block'
-        actualizarColeccionBoton.style.display = 'block'
-        eliminarColeccionBoton.style.display = 'block'
-        //Secciones
-        crearColeccionSeccion.style.display = 'none'
-        actualizarColeccionSeccion.style.display = 'none'
-        eliminarColeccionSeccion.style.display = 'none'
-    })
+
+    function clickParaVerColecciones(boton) {
+        boton.addEventListener('click', () => {
+            mostrarColecciones();
+            //Listas
+            listaColeccionesResultados.style.display = 'block'
+            cartasColeccion.style.display = 'block'
+            cartasColeccion.innerHTML = ''
+            //Botones
+            verTodasColeccionBoton.style.display = 'none'
+            crearColeccionBoton.style.display = 'block'
+            actualizarColeccionBoton.style.display = 'block'
+            eliminarColeccionBoton.style.display = 'block'
+            //Secciones
+            crearColeccionSeccion.style.display = 'none'
+            actualizarColeccionSeccion.style.display = 'none'
+            eliminarColeccionSeccion.style.display = 'none'
+        })
+    }
+    clickParaVerColecciones(botonColecciones);
+    clickParaVerColecciones(verTodasColeccionBoton);
 }
 verTodasColeccionButton();
 
@@ -141,7 +146,7 @@ function actualizarColeccionButton() {
     const actualizarColeccionSeccion = document.getElementById('actualizarColeccion')
     const crearColeccionSeccion = document.getElementById('crearColeccion')
     const eliminarColeccionSeccion = document.getElementById('eliminarColeccion')
-    actualizarColeccionBoton.addEventListener('click', () =>{
+    actualizarColeccionBoton.addEventListener('click', () => {
         //Listas
         listaColeccionesResultados.style.display = 'none'
         cartasColeccion.style.display = 'none'
@@ -174,7 +179,7 @@ function eliminarColeccionButton() {
     const eliminarColeccionSeccion = document.getElementById('eliminarColeccion')
     const crearColeccionSeccion = document.getElementById('crearColeccion')
     const actualizarColeccionSeccion = document.getElementById('actualizarColeccion')
-    eliminarColeccionBoton.addEventListener('click', () =>{
+    eliminarColeccionBoton.addEventListener('click', () => {
         //Listas
         listaColeccionesResultados.style.display = 'none'
         cartasColeccion.style.display = 'none'
@@ -208,10 +213,10 @@ function visibleSeccionartas() {
         seccionCartas.style.flexDirection = 'row'
         const body = document.getElementsByTagName('body')
         body[0].style.backgroundImage = "url('./src/backgroundCartas.jpg')"
-        
+
         const botonCartas = document.getElementById('cartas-buttonHome')
         botonCartas.style.display = 'none'
-        
+
         const botonColecciones = document.getElementById('colecciones-buttonHome')
         botonColecciones.style.display = 'none'
 
@@ -230,7 +235,7 @@ function crearCartasButton() {
     const botonCrearCarta = document.getElementById('crearCartaButton')
     const botonActualizarCarta = document.getElementById('actualizarCartaButton')
     const botonEliminarrCarta = document.getElementById('eliminarCartaButton')
-    
+
     botonCrearCarta.addEventListener('click', () => {
         //Botones
         botonCrearCarta.style.display = 'none'
@@ -255,7 +260,7 @@ function actualizarCartasButton() {
     const botonActualizarCarta = document.getElementById('actualizarCartaButton')
     const botonCrearCarta = document.getElementById('crearCartaButton')
     const botonEliminarrCarta = document.getElementById('eliminarCartaButton')
-    
+
     botonActualizarCarta.addEventListener('click', () => {
         //Botones
         botonActualizarCarta.style.display = 'none'
@@ -279,7 +284,7 @@ function eliminarCartasButton() {
     const botonEliminarrCarta = document.getElementById('eliminarCartaButton')
     const botonCrearCarta = document.getElementById('crearCartaButton')
     const botonActualizarCarta = document.getElementById('actualizarCartaButton')
-    
+
     botonEliminarrCarta.addEventListener('click', () => {
         //Botones
         botonEliminarrCarta.style.display = 'none'

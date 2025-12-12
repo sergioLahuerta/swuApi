@@ -34,17 +34,21 @@
         <div class="row">
             <!-- COLECCIONES -->
             <div id="colecciones" class="col-md-6">
-                <div style="display: flex; flex-direction: column;">
-                    <h2 style="margin-bottom: 1.5rem;">Colecciones</h2>
-                    <button id="volverAtrasColecciones" class="btn-volver">Volver atrás</button>
+                <div class="colecciones__container">
+                    <div class="colecciones__container-backButton">
+                        <h2 style="margin-bottom: 1.5rem; margin-top: 0; font-size: 30px;">Colecciones</h2>
+                        <button id="volverAtrasColecciones" class="btn-volver">Volver atrás</button>
+                    </div>
                     <!-- Obtener todas las colecciones -->
-                    <button id="todasColeccionesButton" class="colecciones__buttons --verTodasColecciones"
-                        type="button">Ver todas</button>
-                    <button id="crearColeccionButton" class="colecciones__buttons --crearColeccion">Crear</button>
-                    <button id="actualizarColeccionButton"
-                        class="colecciones__buttons --actualizarColeccion">Actualizar</button>
-                    <button id="eliminarColeccionButton"
-                        class="colecciones__buttons --eliminarColeccion">Eliminar</button>
+                    <div class="colecciones__container--httpButtons">
+                        <button id="todasColeccionesButton" class="colecciones__buttons --verTodasColecciones"
+                            type="button">Ver todas</button>
+                        <button id="crearColeccionButton" class="colecciones__buttons --crearColeccion">Crear</button>
+                        <button id="actualizarColeccionButton"
+                            class="colecciones__buttons --actualizarColeccion">Actualizar</button>
+                        <button id="eliminarColeccionButton"
+                            class="colecciones__buttons --eliminarColeccion">Eliminar</button>
+                    </div>
                 </div>
                 <!-- Crear Coleccion -->
                 <div id="crearColeccion" class="form-container">
